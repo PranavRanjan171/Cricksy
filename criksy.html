@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#060610"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Criksy 🏏</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Bebas+Neue&family=JetBrains+Mono:wght@400;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#060610;--bg2:#0b0b1a;--surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.13);
+  --lime:#b5f000;--lime2:#d4ff33;--lime-dim:rgba(181,240,0,0.35);--lime-glow:rgba(181,240,0,0.2);
+  --red:#ff3d5a;--red-glow:rgba(255,61,90,0.25);
+  --gold:#f5c518;--gold-glow:rgba(245,197,24,0.25);
+  --blue:#00d4ff;--blue-glow:rgba(0,212,255,0.2);
+  --purple:#a78bfa;
+  --text:#f0f2ff;--muted:#6b7280;--muted2:#9ca3af;
+  --disp:'Bebas Neue',sans-serif;
+  --body:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:16px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 5%,rgba(181,240,0,0.055) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(0,212,255,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ── TYPOGRAPHY ── */
+.disp{font-family:var(--disp);letter-spacing:2px;}
+.mono{font-family:var(--mono);}
+
+/* ── GLASS ── */
+.glass{background:rgba(255,255,255,0.04);border:1px solid var(--border);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);}
+
+/* ── PREMIUM BUTTON SYSTEM ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;font-family:var(--body);font-weight:600;cursor:pointer;transition:all 0.15s;outline:none;-webkit-tap-highlight-color:transparent;}
+.btn:active{transform:scale(0.96);}
+.btn-lime{background:linear-gradient(135deg,#d4ff33 0%,#8ab500 100%);color:#0a1600;box-shadow:0 1px 0 rgba(255,255,255,0.35) inset,0 4px 16px rgba(181,240,0,0.3),0 2px 0 #3a6000;}
+.btn-lime:hover{box-shadow:0 1px 0 rgba(255,255,255,0.35) inset,0 6px 22px rgba(181,240,0,0.4),0 2px 0 #3a6000;}
+.btn-lime:active{box-shadow:0 1px 0 rgba(255,255,255,0.2) inset,0 2px 8px rgba(181,240,0,0.2);}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--muted2);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:var(--border2);}
+.btn-red{background:linear-gradient(135deg,#ff5570 0%,#cc1f3a 100%);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,0.2) inset,0 4px 14px var(--red-glow),0 2px 0 #7a0015;}
+.btn-red:active{box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 2px 6px var(--red-glow);}
+.btn-gold{background:linear-gradient(135deg,#ffe033 0%,#c89600 100%);color:#1a1200;box-shadow:0 1px 0 rgba(255,255,255,0.35) inset,0 4px 14px var(--gold-glow),0 2px 0 #6a4e00;}
+.btn-gold:active{box-shadow:0 1px 0 rgba(255,255,255,0.15) inset,0 2px 6px var(--gold-glow);}
+.btn-sm{padding:10px 16px;font-size:13px;border-radius:10px;}
+.btn-md{padding:14px 22px;font-size:14px;border-radius:12px;}
+.btn-lg{padding:17px 28px;font-size:15px;border-radius:14px;width:100%;}
+.btn-xl{padding:19px 32px;font-size:16px;border-radius:16px;width:100%;font-weight:700;}
+
+/* BACK */
+.back-btn{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.back-btn:active{transform:scale(0.93);}
+
+/* INPUTS — FIXED: use type=text with inputmode for mobile, prevent zoom */
+.inp{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:14px 15px;color:var(--text);font-family:var(--body);font-size:16px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;-webkit-appearance:none;appearance:none;}
+.inp:focus{border-color:rgba(181,240,0,0.45);box-shadow:0 0 0 3px rgba(181,240,0,0.08);}
+.inp::placeholder{color:var(--muted);}
+.sel{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-family:var(--body);font-size:15px;outline:none;-webkit-appearance:none;appearance:none;}
+.sel:focus{border-color:rgba(181,240,0,0.4);}
+
+/* STEPPER — also allows direct tap-to-edit on val */
+.stepper{display:flex;align-items:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.stepper-btn{width:46px;height:50px;background:rgba(255,255,255,0.05);border:none;color:var(--text);font-size:22px;cursor:pointer;transition:background 0.12s;flex-shrink:0;}
+.stepper-btn:active{background:rgba(255,255,255,0.14);}
+.stepper-val{flex:1;text-align:center;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--lime);text-shadow:0 0 10px var(--lime-glow);}
+
+/* PAGE HEADER */
+.page-hdr{padding:16px 16px 0;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;background:linear-gradient(to bottom,rgba(6,6,16,0.98) 70%,transparent);padding-bottom:8px;}
+.page-ttl{font-family:var(--disp);font-size:28px;color:var(--lime);letter-spacing:2px;}
+
+/* STEP DOTS */
+.steps{display:flex;gap:7px;margin-bottom:26px;}
+.step-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,0.07);transition:all 0.3s;}
+.step-dot.on{background:var(--lime);box-shadow:0 0 6px var(--lime-glow);}
+.step-dot.done{background:rgba(181,240,0,0.35);}
+.step-panel{display:none;}.step-panel.active{display:block;animation:fadeUp 0.28s ease;}
+
+/* SECTION CARD */
+.scard{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.35);}
+.scard-head{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);}
+.scard-lbl{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:2px;font-weight:700;}
+.scard-sub{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.col-head{display:grid;padding:6px 14px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.col-l{font-size:10px;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:1px;}
+.col-l:first-child{text-align:left;}
+
+/* FORMAT CARDS */
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.fmt-card{border-radius:14px;padding:15px 13px;cursor:pointer;text-align:center;background:rgba(255,255,255,0.03);border:1.5px solid var(--border);transition:all 0.2s;box-shadow:0 2px 12px rgba(0,0,0,0.25);}
+.fmt-card:active{transform:scale(0.97);}
+.fmt-card.sel{border-color:var(--lime);background:rgba(181,240,0,0.07);box-shadow:0 4px 18px rgba(181,240,0,0.15);}
+.fmt-icon{font-size:26px;margin-bottom:5px;}
+.fmt-name{font-size:12px;font-weight:700;color:var(--text);}
+.fmt-desc{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* PLAYER ROW */
+.team-hdr{display:flex;align-items:center;gap:9px;margin:18px 0 11px;}
+.team-dot{width:9px;height:9px;border-radius:50%;}
+.ta-dot{background:var(--lime);box-shadow:0 0 7px var(--lime-glow);}
+.tb-dot{background:var(--blue);box-shadow:0 0 7px var(--blue-glow);}
+.team-name-lbl{font-weight:700;font-size:14px;}
+.p-row{display:flex;gap:8px;align-items:center;margin-bottom:9px;animation:fadeUp 0.2s ease;}
+.p-num{font-family:var(--mono);font-size:12px;color:var(--muted);width:20px;flex-shrink:0;text-align:right;}
+.p-inp{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:11px;padding:12px 13px;color:var(--text);font-family:var(--body);font-size:15px;outline:none;transition:border-color 0.2s;-webkit-appearance:none;appearance:none;}
+.p-inp:focus{border-color:rgba(181,240,0,0.38);}
+
+/* ROW2 */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.field{margin-bottom:16px;}
+.field-lbl{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px;font-weight:600;}
+
+/* ══ SPLASH ══ */
+#splash{align-items:center;justify-content:center;text-align:center;padding:40px 24px;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;}
+.orb1{width:360px;height:360px;background:rgba(181,240,0,0.09);top:-100px;left:-80px;}
+.orb2{width:280px;height:280px;background:rgba(0,212,255,0.06);bottom:-60px;right:-60px;}
+.splash-content{position:relative;z-index:2;width:100%;max-width:380px;}
+.splash-ball{width:88px;height:88px;border-radius:50%;margin:0 auto 22px;background:linear-gradient(135deg,#d4ff33 0%,#5a8000 50%,#1a2a00 100%);display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 50px rgba(181,240,0,0.3),inset -16px -16px 30px rgba(0,0,0,0.45),inset 8px 8px 16px rgba(255,255,255,0.12);animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-10px) rotate(5deg);}}
+.splash-logo{font-family:var(--disp);font-size:clamp(72px,22vw,108px);letter-spacing:5px;line-height:.9;background:linear-gradient(180deg,#e8ff80 0%,#b5f000 45%,#5a8000 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 28px rgba(181,240,0,0.35));margin-bottom:8px;}
+.splash-tag{font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;font-weight:500;margin-bottom:40px;}
+.splash-new{width:100%;padding:18px;font-size:16px;border-radius:16px;margin-bottom:12px;}
+.splash-btns-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.splash-sec-btn{padding:13px;font-size:13px;border-radius:14px;color:var(--muted2);}
+
+/* ══ TOSS ══ */
+#toss{overflow-y:auto;padding-bottom:40px;}
+.toss-step-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,0.07);transition:all 0.3s;}
+.toss-step-dot.active{background:var(--gold);box-shadow:0 0 6px var(--gold-glow);}
+.toss-step-dot.done{background:rgba(245,197,24,0.35);}
+.toss-panel{display:none;flex-direction:column;align-items:center;padding:28px 24px 16px;text-align:center;animation:fadeUp 0.28s ease;}
+.toss-panel.active{display:flex;}
+.toss-ttl{font-family:var(--disp);font-size:42px;color:var(--gold);letter-spacing:3px;text-shadow:0 0 24px var(--gold-glow);margin-bottom:6px;}
+.toss-sub{font-size:13px;color:var(--muted2);margin-bottom:28px;line-height:1.5;}
+.toss-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:360px;margin-bottom:16px;}
+.toss-big-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:22px 14px;border-radius:18px;cursor:pointer;
+  background:rgba(255,255,255,0.04);border:2px solid rgba(255,255,255,0.08);
+  color:var(--text);font-family:var(--body);font-weight:700;
+  transition:all 0.18s;min-height:110px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.35);
+}
+.toss-big-btn:active{transform:scale(0.95);}
+.toss-big-btn.selected{border-color:var(--gold);background:rgba(245,197,24,0.10);box-shadow:0 4px 22px var(--gold-glow);}
+.toss-result-box{margin-top:20px;width:100%;max-width:320px;text-align:center;animation:fadeUp 0.3s ease;}
+.toss-result-icon{font-size:48px;margin-bottom:8px;}
+.coin-scene{width:130px;height:130px;margin:0 auto 24px;perspective:500px;}
+.coin-3d{width:100%;height:100%;position:relative;transform-style:preserve-3d;cursor:pointer;transition:transform 0.15s;}
+.coin-3d:active{transform:scale(0.92);}
+.coin-face{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;font-size:50px;}
+.coin-h{background:radial-gradient(circle at 33% 28%,#fff9 6px,transparent 32%),radial-gradient(circle at 30% 25%,#ffe033 0%,#cc9900 42%,#7a5c00 100%);border:3px solid #b88a00;box-shadow:0 0 35px var(--gold-glow),4px 5px 0 #5a4000,inset 0 -3px 7px rgba(0,0,0,0.4);}
+.coin-t{transform:rotateY(180deg);background:radial-gradient(circle at 33% 28%,#fff6 5px,transparent 28%),radial-gradient(circle at 30% 25%,#e8e8e8 0%,#b0b0b0 50%,#707070 100%);border:3px solid #909090;box-shadow:0 0 16px rgba(180,180,180,0.15),4px 5px 0 #404040,inset 0 -3px 7px rgba(0,0,0,0.4);}
+
+/* ══ MATCH ══ */
+#match{overflow-y:auto;padding-bottom:28px;}
+.match-hdr{padding:12px 16px;position:sticky;top:0;z-index:10;background:rgba(6,6,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06);}
+.hdr-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.hdr-team{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;}
+.score-display{text-align:center;margin-bottom:6px;display:flex;align-items:baseline;justify-content:center;gap:3px;}
+.score-runs{font-family:var(--disp);font-size:64px;line-height:1;background:linear-gradient(180deg,#fff 0%,#c0c8ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.score-wkts{font-family:var(--disp);font-size:36px;color:var(--muted);line-height:1;}
+.meta-row{display:flex;align-items:center;justify-content:center;gap:18px;}
+.meta-item{font-family:var(--mono);font-size:11px;color:var(--muted2);}
+.meta-item span{color:var(--lime);}
+.target-strip{margin-top:8px;border-radius:9px;padding:6px 12px;font-size:12px;color:var(--blue);background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);text-align:center;display:none;}
+.target-strip.show{display:block;}
+
+/* BALL STRIP */
+.ball-strip{display:flex;gap:5px;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.05);overflow-x:auto;scrollbar-width:none;}
+.ball-strip::-webkit-scrollbar{display:none;}
+.bc{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.bc-dot{background:rgba(255,255,255,0.05);color:var(--muted);}
+.bc-1{background:rgba(100,200,100,0.1);color:#7ecf7e;}
+.bc-2{background:rgba(100,200,100,0.16);color:#5ab85a;}
+.bc-3{background:rgba(150,220,50,0.14);color:#9dd840;}
+.bc-4{background:rgba(181,240,0,0.13);color:var(--lime);border:1px solid rgba(181,240,0,0.35);}
+.bc-6{background:rgba(181,240,0,0.18);color:var(--lime2);border:1px solid rgba(181,240,0,0.45);box-shadow:0 0 8px rgba(181,240,0,0.2);}
+.bc-w{background:rgba(255,61,90,0.13);color:var(--red);border:1px solid rgba(255,61,90,0.35);}
+.bc-wd,.bc-nb{background:rgba(245,197,24,0.09);color:var(--gold);}
+.over-sep{width:1px;height:24px;background:rgba(255,255,255,0.09);flex-shrink:0;}
+
+/* BATTING/BOWLING ROWS */
+.bat-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:10px 14px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04);}
+.bat-row:last-child{border-bottom:none;}
+.bat-name{font-size:13px;font-weight:600;}
+.bat-name.striker{color:var(--lime);text-shadow:0 0 8px rgba(181,240,0,0.35);}
+.bat-stat{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;}
+.bat-stat.r{color:var(--text);font-weight:700;font-size:15px;}
+.bowl-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:10px 14px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04);}
+.bowl-row:last-child{border-bottom:none;}
+.bowl-name{font-size:13px;font-weight:600;}
+.bowl-name.bowling{color:var(--blue);text-shadow:0 0 8px var(--blue-glow);}
+.bowl-stat{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;}
+
+.striker-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 6px var(--lime);margin-right:5px;animation:pulse 1s ease-in-out infinite;vertical-align:middle;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+.prtn{margin:8px 12px 0;border-radius:13px;padding:10px 15px;display:flex;align-items:center;justify-content:space-between;background:rgba(245,197,24,0.05);border:1px solid rgba(245,197,24,0.12);}
+.prtn-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;}
+.prtn-b{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+.prtn-r{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--gold);text-shadow:0 0 8px var(--gold-glow);}
+
+/* SCORING PANEL */
+.score-panel{margin:8px 12px 0;border-radius:18px;overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid var(--border);box-shadow:0 6px 24px rgba(0,0,0,0.35);}
+.score-panel-lbl{padding:9px 14px;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:2px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);}
+.runs-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;padding:11px;}
+.run-btn{aspect-ratio:1;border-radius:13px;border:none;font-family:var(--mono);font-size:19px;font-weight:700;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.1s;-webkit-tap-highlight-color:transparent;}
+.run-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:48%;background:rgba(255,255,255,0.1);border-radius:13px 13px 0 0;pointer-events:none;}
+.run-btn:active{transform:translateY(2px) scale(0.94);}
+.rb0{background:linear-gradient(180deg,#222235 0%,#141422 100%);color:var(--muted2);box-shadow:0 3px 0 #07070f,0 4px 10px rgba(0,0,0,0.45);}
+.rb1{background:linear-gradient(180deg,#1e3a1e 0%,#0f1f0f 100%);color:#7ecf7e;box-shadow:0 3px 0 #060e06,0 4px 10px rgba(0,0,0,0.4);}
+.rb2{background:linear-gradient(180deg,#1e3a1e 0%,#0f2010 100%);color:#5ab85a;box-shadow:0 3px 0 #061006,0 4px 10px rgba(0,0,0,0.4);}
+.rb3{background:linear-gradient(180deg,#243020 0%,#131c0e 100%);color:#9dd840;box-shadow:0 3px 0 #0a1004,0 4px 10px rgba(0,0,0,0.4);}
+.rb4{background:linear-gradient(180deg,#283810 0%,#192508 100%);color:var(--lime2);border:1px solid rgba(181,240,0,0.28);box-shadow:0 3px 0 #0c1404,0 4px 14px rgba(181,240,0,0.18);}
+.rb6{background:linear-gradient(180deg,rgba(181,240,0,0.22) 0%,rgba(100,160,0,0.18) 100%);color:var(--lime2);font-size:21px;border:1px solid rgba(181,240,0,0.38);box-shadow:0 3px 0 rgba(80,130,0,0.45),0 4px 18px rgba(181,240,0,0.22);}
+.extras-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 11px 11px;}
+.extra-btn{border-radius:11px;background:rgba(255,255,255,0.03);border:1px solid rgba(245,197,24,0.18);color:var(--gold);font-family:var(--body);font-size:12px;font-weight:700;padding:10px 6px;cursor:pointer;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,0.4),0 3px 8px rgba(0,0,0,0.3);transition:transform 0.1s;}
+.extra-btn:active{transform:translateY(2px);}
+.wkt-btn-wrap{padding:0 11px 9px;}
+.undo-wrap{padding:0 11px 11px;}
+.undo-btn{width:100%;padding:10px;font-size:12px;font-weight:600;color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:11px;cursor:pointer;font-family:var(--body);transition:background 0.15s,color 0.15s;}
+.undo-btn:active{background:rgba(255,255,255,0.05);color:var(--text);}
+
+/* QR SHARE BAR */
+.qr-bar{margin:8px 12px 0;border-radius:13px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;background:rgba(168,139,250,0.06);border:1px solid rgba(168,139,250,0.15);}
+.qr-bar-lbl{font-size:12px;color:var(--purple);font-weight:600;}
+.qr-bar-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* ══ MODALS ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:linear-gradient(180deg,rgba(22,22,40,0.99) 0%,rgba(12,12,24,1) 100%);border:1px solid rgba(255,255,255,0.1);border-radius:24px 24px 0 0;padding:24px 22px 38px;width:100%;max-width:500px;animation:slideUp 0.3s cubic-bezier(0.32,0.72,0,1);box-shadow:0 -16px 50px rgba(0,0,0,0.55);}
+.modal-box::before{content:'';display:block;width:36px;height:3px;background:rgba(255,255,255,0.18);border-radius:2px;margin:0 auto 22px;}
+.modal-box.center{border-radius:24px;margin:20px;text-align:center;}
+.modal-ttl{font-family:var(--disp);font-size:30px;letter-spacing:1px;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--muted2);margin-bottom:20px;}
+
+/* ══ END ══ */
+#end{overflow-y:auto;}
+.end-hero{padding:36px 22px 28px;text-align:center;background:linear-gradient(180deg,rgba(181,240,0,0.055) 0%,transparent 100%);border-bottom:1px solid rgba(255,255,255,0.06);}
+.end-trophy{width:84px;height:84px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,#ffe033,#cc9900,#7a5c00);display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 45px rgba(255,204,0,0.35),inset -10px -10px 18px rgba(0,0,0,0.4),inset 5px 5px 10px rgba(255,255,255,0.18);}
+.end-rl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.end-winner{font-family:var(--disp);font-size:40px;background:linear-gradient(180deg,#e8ff80,#b5f000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;}
+.end-margin{font-size:13px;color:var(--muted2);margin-top:6px;}
+.sc-body{padding:10px;}
+.sc-title{font-family:var(--disp);font-size:20px;letter-spacing:1px;margin:14px 0 8px;}
+.sc-card{border-radius:15px;overflow:hidden;margin-bottom:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);box-shadow:0 4px 18px rgba(0,0,0,0.35);}
+.sc-bat-row{display:grid;grid-template-columns:3fr 1fr 1fr 1fr;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,0.04);align-items:center;font-size:12px;}
+.sc-bat-row:last-child{border-bottom:none;}
+.sc-nm{color:var(--text);font-weight:600;}
+.sc-dis{font-size:10px;color:var(--muted);}
+.sc-v{font-family:var(--mono);text-align:center;color:var(--muted);}
+.sc-v.p{color:var(--text);font-weight:700;}
+.sc-bowl-row{display:grid;grid-template-columns:3fr 1fr 1fr 1fr 1fr;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,0.04);align-items:center;font-size:12px;}
+.sc-bowl-row:last-child{border-bottom:none;}
+.fow{padding:5px 13px;font-size:11px;color:var(--muted);font-family:var(--mono);border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:8px;}
+.fow-s{color:var(--red);font-weight:700;}
+.end-actions{display:flex;flex-direction:column;gap:9px;padding:14px;}
+.share-btn{display:flex;align-items:center;justify-content:center;gap:9px;border-radius:14px;padding:15px;font-family:var(--body);font-size:14px;font-weight:700;cursor:pointer;border:none;transition:transform 0.12s;}
+.share-btn:active{transform:scale(0.97);}
+.sb-img{background:linear-gradient(135deg,#d4ff33,#8ab500);color:#0a1600;box-shadow:0 3px 0 #3a6000,0 5px 18px rgba(181,240,0,0.28);}
+.sb-wa{background:linear-gradient(135deg,#2edb73,#1a9e50);color:#fff;box-shadow:0 3px 0 #0d5a28,0 5px 18px rgba(30,200,80,0.28);}
+.sb-new{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid var(--border);box-shadow:0 3px 10px rgba(0,0,0,0.25);}
+
+/* ══ HISTORY ══ */
+#history{overflow-y:auto;}
+.hist-list{padding:10px;display:flex;flex-direction:column;gap:9px;}
+.hist-card{border-radius:15px;padding:15px;background:rgba(255,255,255,0.03);border:1px solid var(--border);box-shadow:0 3px 14px rgba(0,0,0,0.28);transition:border-color 0.2s,background 0.2s;}
+.hist-card:active{background:rgba(255,255,255,0.06);}
+.hc-teams{font-weight:700;font-size:14px;margin-bottom:3px;}
+.hc-winner{font-size:12px;color:var(--lime);}
+.hc-scores{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;}
+.hc-date{font-size:10px;color:var(--muted);margin-top:5px;}
+.hist-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;}
+
+/* ══ TOURNAMENT ══ */
+#tournament{overflow-y:auto;padding-bottom:28px;}
+.tab-bar{display:flex;overflow-x:auto;scrollbar-width:none;gap:0;border-bottom:1px solid var(--border);background:rgba(6,6,16,0.9);backdrop-filter:blur(16px);position:sticky;top:0;z-index:9;padding:0 12px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:13px 16px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;text-transform:uppercase;letter-spacing:1px;}
+.tab.active{color:var(--lime);border-bottom-color:var(--lime);}
+.tab-content{display:none;padding:14px 12px;}
+.tab-content.active{display:block;animation:fadeUp 0.25s ease;}
+.tourn-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;}
+/* Points table */
+.pts-table{width:100%;border-collapse:collapse;}
+.pts-th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;}
+.pts-th:first-child{text-align:left;}
+.pts-td{font-size:12px;padding:10px 10px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:center;font-family:var(--mono);}
+.pts-td:first-child{text-align:left;font-family:var(--body);font-weight:600;}
+.pts-tr:first-child .pts-td{color:var(--lime);}
+/* Fixtures */
+.fixture-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:9px;}
+.fix-teams{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:6px;}
+.fix-vs{font-size:11px;color:var(--muted);padding:0 10px;}
+.fix-score{font-family:var(--mono);font-size:13px;color:var(--lime);}
+.fix-result{font-size:11px;color:var(--muted2);margin-top:4px;}
+.fix-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:50px;}
+.fix-live{background:rgba(255,61,90,0.15);color:var(--red);border:1px solid rgba(255,61,90,0.3);}
+.fix-done{background:rgba(181,240,0,0.08);color:var(--lime);border:1px solid rgba(181,240,0,0.2);}
+.fix-upcoming{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);}
+/* Cap leaderboards */
+.cap-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.cap-row:last-child{border-bottom:none;}
+.cap-rank{font-family:var(--mono);font-size:12px;color:var(--muted);width:22px;flex-shrink:0;}
+.cap-name{flex:1;font-weight:600;font-size:13px;}
+.cap-team{font-size:11px;color:var(--muted);}
+.cap-val{font-family:var(--mono);font-size:16px;font-weight:700;}
+.cap-orange{color:#ff8c00;}
+.cap-purple{color:var(--purple);}
+.cap-mvp{color:var(--gold);}
+.cap-icon{font-size:18px;width:32px;text-align:center;}
+
+/* NRR */
+.nrr-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.04);align-items:center;font-size:12px;}
+.nrr-row:last-child{border-bottom:none;}
+.nrr-td{font-family:var(--mono);text-align:center;color:var(--muted);}
+.nrr-td:first-child{font-family:var(--body);font-weight:600;color:var(--text);text-align:left;}
+.nrr-pos{color:var(--lime);}
+.nrr-neg{color:var(--red);}
+
+/* QR MODAL */
+.qr-wrap{display:flex;justify-content:center;margin:16px 0;}
+.qr-wrap canvas{border-radius:12px;padding:10px;background:#fff;}
+.qr-link{word-break:break-all;font-size:12px;color:var(--blue);text-align:center;margin-bottom:16px;font-family:var(--mono);}
+.copy-link-btn{width:100%;padding:13px;font-size:13px;font-weight:700;border-radius:12px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:var(--blue);cursor:pointer;font-family:var(--body);transition:background 0.15s;}
+.copy-link-btn:active{background:rgba(0,212,255,0.2);}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(18,18,32,0.96);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:11px 22px;font-size:13px;color:var(--text);z-index:500;opacity:0;transition:opacity 0.28s;white-space:nowrap;pointer-events:none;backdrop-filter:blur(20px);box-shadow:0 6px 26px rgba(0,0,0,0.5);}
+.toast.show{opacity:1;}
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:400;display:none;}
+.confetti-wrap.show{display:block;}
+.cp{position:absolute;animation:cfFall linear forwards;border-radius:2px;}
+@keyframes cfFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(13px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+
+#share-card{position:fixed;left:-9999px;top:0;width:420px;background:#060610;color:#f0f2ff;font-family:Arial,sans-serif;padding:28px;}
+
+/* Separator */
+.sep{width:1px;height:22px;background:rgba(255,255,255,0.08);flex-shrink:0;}
+
+/* Tournament setup */
+.tourn-form{padding:14px 12px;}
+.tourn-team-add{display:flex;gap:8px;margin-bottom:10px;}
+.tourn-team-add .inp{flex:1;}
+.team-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:50px;padding:5px 12px;font-size:12px;font-weight:600;margin:0 4px 6px 0;}
+.team-chip-rm{color:var(--muted);cursor:pointer;font-size:14px;line-height:1;}
+.team-chip-rm:hover{color:var(--red);}
+
+/* ── FIXTURE START MATCH ── */
+.fix-start-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;margin-top:10px;padding:11px;
+  font-size:13px;font-weight:700;border-radius:11px;
+  background:linear-gradient(135deg,rgba(181,240,0,0.14) 0%,rgba(100,160,0,0.10) 100%);
+  border:1px solid rgba(181,240,0,0.3);
+  color:var(--lime);cursor:pointer;font-family:var(--body);
+  transition:all 0.18s;
+}
+.fix-start-btn:active{transform:scale(0.97);background:rgba(181,240,0,0.2);}
+.fix-start-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.fix-result-done{font-size:12px;color:var(--lime);margin-top:8px;text-align:center;font-weight:600;}
+
+/* ── TOURNAMENT MATCH PLAYER MODAL ── */
+#tournMatchModal .modal-box{max-height:88vh;overflow-y:auto;}
+.tm-team-section{margin-bottom:18px;}
+.tm-team-hdr{display:flex;align-items:center;gap:9px;margin-bottom:10px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);}
+.tm-team-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:50px;}
+.tm-badge-a{background:rgba(181,240,0,0.12);color:var(--lime);border:1px solid rgba(181,240,0,0.25);}
+.tm-badge-b{background:rgba(0,212,255,0.09);color:var(--blue);border:1px solid rgba(0,212,255,0.2);}
+.tm-team-name{font-weight:700;font-size:14px;flex:1;}
+.tm-player-hint{font-size:11px;color:var(--muted);margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="confetti-wrap" id="confetti"></div>
+
+<!-- SPLASH -->
+<div class="screen active" id="splash">
+  <div class="orb orb1"></div><div class="orb orb2"></div>
+  <div class="splash-content">
+    <div class="splash-ball">🏏</div>
+    <div class="splash-logo">CRIKSY</div>
+    <div class="splash-tag">Street Cricket · No Login · Just Play</div>
+    <button class="btn btn-lime splash-new" id="newMatchBtn">⚡ New Match</button>
+    <button class="btn btn-ghost splash-new" id="duelBtn" style="margin-bottom:12px;background:rgba(245,197,24,0.08);color:var(--gold);border:1px solid rgba(245,197,24,0.22);">⚔️ Duel Mode</button>
+    <div class="splash-btns-row">
+      <button class="btn btn-ghost splash-sec-btn" id="histBtn">📋 History</button>
+      <button class="btn btn-ghost splash-sec-btn" id="tournBtn">🏆 Tournament</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div class="screen" id="setup">
+  <div class="page-hdr">
+    <button class="back-btn" id="setupBack">←</button>
+    <div class="page-ttl">SETUP</div>
+  </div>
+  <div style="padding:12px 16px 32px; overflow-y:auto;">
+    <div class="steps"><div class="step-dot on" id="sd0"></div><div class="step-dot" id="sd1"></div><div class="step-dot" id="sd2"></div></div>
+
+    <!-- Step 0: Format & Teams -->
+    <div class="step-panel active" id="sp0">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Step 1 of 3</div>
+      <div style="font-family:var(--disp);font-size:24px;letter-spacing:1px;margin-bottom:20px;">MATCH FORMAT</div>
+      <div class="field">
+        <div class="field-lbl">Format</div>
+        <div class="fmt-grid" id="fmtGrid">
+          <div class="fmt-card sel" data-fmt="overs"><div class="fmt-icon">🕐</div><div class="fmt-name">OVERS</div><div class="fmt-desc">Fixed overs</div></div>
+          <div class="fmt-card" data-fmt="target"><div class="fmt-icon">🎯</div><div class="fmt-name">TARGET</div><div class="fmt-desc">Chase a score</div></div>
+          <div class="fmt-card" data-fmt="lastman"><div class="fmt-icon">⚔️</div><div class="fmt-name">LAST MAN</div><div class="fmt-desc">Last wicket wins</div></div>
+        </div>
+      </div>
+      <div class="row2" id="oversRow">
+        <div class="field">
+          <div class="field-lbl">Overs</div>
+          <div class="stepper">
+            <button class="stepper-btn" id="ovDn">−</button>
+            <div class="stepper-val" id="ovVal">5</div>
+            <button class="stepper-btn" id="ovUp">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-lbl">Wickets</div>
+          <div class="stepper">
+            <button class="stepper-btn" id="wkDn">−</button>
+            <div class="stepper-val" id="wkVal">2</div>
+            <button class="stepper-btn" id="wkUp">+</button>
+          </div>
+        </div>
+      </div>
+      <div id="targetRow" style="display:none">
+        <div class="field">
+          <div class="field-lbl">Target Runs</div>
+          <div class="stepper">
+            <button class="stepper-btn" id="tgDn">−</button>
+            <div class="stepper-val" id="tgVal">30</div>
+            <button class="stepper-btn" id="tgUp">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="field"><div class="field-lbl">Team A Name</div><input class="inp" id="teamA" placeholder="e.g. Street Kings" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false"/></div>
+      <div class="field"><div class="field-lbl">Team B Name</div><input class="inp" id="teamB" placeholder="e.g. Gully Boys" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false"/></div>
+      <button class="btn btn-lime btn-xl" id="step0Next" style="margin-top:20px;">Next → Players</button>
+    </div>
+
+    <!-- Step 1: Players -->
+    <div class="step-panel" id="sp1">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Step 2 of 3</div>
+      <div style="font-family:var(--disp);font-size:24px;letter-spacing:1px;margin-bottom:20px;">PLAYERS</div>
+      <div id="playersContainer"></div>
+      <button class="btn btn-lime btn-xl" id="step1Next" style="margin-top:20px;">Next → Review</button>
+    </div>
+
+    <!-- Step 2: Review -->
+    <div class="step-panel" id="sp2">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Step 3 of 3</div>
+      <div style="font-family:var(--disp);font-size:24px;letter-spacing:1px;margin-bottom:20px;">ALL SET?</div>
+      <div id="reviewContent"></div>
+      <button class="btn btn-lime btn-xl" id="step2Next" style="margin-top:20px;">Let's Toss 🪙</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOSS -->
+<div class="screen" id="toss">
+  <div style="padding:20px 24px 0;display:flex;gap:8px;">
+    <div class="toss-step-dot active" id="tsd0"></div>
+    <div class="toss-step-dot" id="tsd1"></div>
+    <div class="toss-step-dot" id="tsd2"></div>
+    <div class="toss-step-dot" id="tsd3"></div>
+  </div>
+
+  <!-- Panel 0: Who calls -->
+  <div class="toss-panel active" id="tp0">
+    <div class="toss-ttl">WHO CALLS?</div>
+    <div class="toss-sub">Pick the team that will call the coin</div>
+    <div class="toss-choice-grid">
+      <button class="toss-big-btn" id="tossCallerA"></button>
+      <button class="toss-big-btn" id="tossCallerB"></button>
+    </div>
+  </div>
+
+  <!-- Panel 1: Heads or Tails -->
+  <div class="toss-panel" id="tp1">
+    <div class="toss-ttl" id="tossCallTitle">CALL IT!</div>
+    <div class="toss-sub" id="tossCallSub">What do you call?</div>
+    <div class="toss-choice-grid">
+      <button class="toss-big-btn toss-ht-btn" id="btnHeads">
+        <span style="font-size:36px;display:block;margin-bottom:6px;">🟡</span>
+        <span style="font-size:16px;font-weight:800;letter-spacing:1px;">HEADS</span>
+      </button>
+      <button class="toss-big-btn toss-ht-btn" id="btnTails">
+        <span style="font-size:36px;display:block;margin-bottom:6px;">⚪</span>
+        <span style="font-size:16px;font-weight:800;letter-spacing:1px;">TAILS</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel 2: Flip -->
+  <div class="toss-panel" id="tp2">
+    <div class="toss-ttl" id="tossCoinTitle">FLIP!</div>
+    <div class="toss-sub" id="tossCoinSub">Tap the coin or press Flip</div>
+    <div class="coin-scene"><div class="coin-3d" id="coin"><div class="coin-face coin-h">🏏</div><div class="coin-face coin-t">⭕</div></div></div>
+    <button class="btn btn-gold btn-xl" id="flipBtn" style="max-width:300px;border-radius:15px;">🪙 Flip Coin</button>
+    <div class="toss-result-box" id="tossResultBox" style="display:none;">
+      <div class="toss-result-icon" id="tossResultIcon">🎉</div>
+      <div id="tossResult" style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;"></div>
+      <button class="btn btn-lime btn-xl" id="tossNextBtn" style="max-width:300px;border-radius:15px;margin-top:12px;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Panel 3: Who bats first -->
+  <div class="toss-panel" id="tp3">
+    <div class="toss-ttl" id="bfTitle">BAT OR FIELD?</div>
+    <div class="toss-sub" id="bfLabel">Who bats first?</div>
+    <div class="toss-choice-grid">
+      <button class="toss-big-btn" id="bfA">
+        <span style="font-size:28px;display:block;margin-bottom:6px;">🏏</span>
+        <span id="bfAName" style="font-size:14px;font-weight:800;"></span>
+        <span style="font-size:11px;color:var(--muted);display:block;margin-top:3px;">Bat First</span>
+      </button>
+      <button class="toss-big-btn" id="bfB">
+        <span style="font-size:28px;display:block;margin-bottom:6px;">🏏</span>
+        <span id="bfBName" style="font-size:14px;font-weight:800;"></span>
+        <span style="font-size:11px;color:var(--muted);display:block;margin-top:3px;">Bat First</span>
+      </button>
+    </div>
+    <button class="btn btn-lime btn-xl" id="startMatchBtn" style="max-width:300px;border-radius:15px;margin-top:16px;" disabled>🏏 Start Match</button>
+  </div>
+</div>
+
+<!-- MATCH -->
+<div class="screen" id="match">
+  <div class="match-hdr">
+    <div class="hdr-teams"><div class="hdr-team" id="batTeamLbl">—</div><div style="font-size:9px;color:rgba(255,255,255,0.15);">vs</div><div class="hdr-team" id="fldTeamLbl">—</div></div>
+    <div class="score-display"><div class="score-runs" id="liveRuns">0</div><div class="score-wkts" id="liveWkts">/0</div></div>
+    <div class="meta-row">
+      <div class="meta-item">Overs <span id="liveOvers">0.0</span></div>
+      <div class="meta-item">RR <span id="liveRR">0.00</span></div>
+      <div class="meta-item" id="needMeta" style="display:none;">Need <span id="liveNeed">—</span></div>
+    </div>
+    <div class="target-strip" id="targetStrip"></div>
+  </div>
+  <div class="ball-strip" id="ballStrip"></div>
+  <!-- QR Bar -->
+  <div class="qr-bar" id="qrBar">
+    <div><div class="qr-bar-lbl">📡 Spectator Link</div><div class="qr-bar-sub">Scan QR to follow live</div></div>
+    <button class="btn btn-ghost btn-sm" id="qrShowBtn">Show QR</button>
+  </div>
+  <!-- Batting -->
+  <div class="scard" style="margin:8px 12px 0;">
+    <div class="scard-head"><div class="scard-lbl">🏏 Batting</div><div class="scard-sub" id="innLbl">1st Inn</div></div>
+    <div class="col-head" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr;"><div class="col-l">Batter</div><div class="col-l">R</div><div class="col-l">B</div><div class="col-l">4s</div><div class="col-l">SR</div></div>
+    <div id="batRows"></div>
+  </div>
+  <!-- Partnership -->
+  <div class="prtn"><div><div class="prtn-lbl">Partnership</div><div class="prtn-b" id="prtnBalls">0 balls</div></div><div class="prtn-r" id="prtnRuns">0</div></div>
+  <!-- Bowling -->
+  <div class="scard" style="margin:8px 12px 0;">
+    <div class="scard-head"><div class="scard-lbl">⚡ Bowling</div><div class="scard-sub" id="overLbl">Over 1</div></div>
+    <div class="col-head" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr;"><div class="col-l">Bowler</div><div class="col-l">O</div><div class="col-l">R</div><div class="col-l">W</div><div class="col-l">Eco</div></div>
+    <div id="bowlRows"></div>
+  </div>
+  <!-- Scoring -->
+  <div class="score-panel">
+    <div class="score-panel-lbl">Score a Delivery</div>
+    <div class="runs-grid">
+      <button class="run-btn rb0" id="rb0">•</button>
+      <button class="run-btn rb1" id="rb1">1</button>
+      <button class="run-btn rb2" id="rb2">2</button>
+      <button class="run-btn rb3" id="rb3">3</button>
+      <button class="run-btn rb4" id="rb4">4</button>
+      <button class="run-btn rb6" id="rb6">6</button>
+    </div>
+    <div class="extras-grid">
+      <button class="extra-btn" id="wideBtn">Wide +1</button>
+      <button class="extra-btn" id="nbBtn">No Ball</button>
+      <button class="extra-btn" id="byeBtn">Bye +1</button>
+    </div>
+    <div class="wkt-btn-wrap"><button class="btn btn-red btn-lg" id="wktBtn">🔴 WICKET</button></div>
+    <div class="undo-wrap"><button class="undo-btn" id="undoBtn">↩ Undo Last Ball</button></div>
+  </div>
+</div>
+
+<!-- END -->
+<div class="screen" id="end">
+  <div class="end-hero">
+    <div class="end-trophy">🏆</div>
+    <div class="end-rl">Match Result</div>
+    <div class="end-winner" id="endWinner">—</div>
+    <div class="end-margin" id="endMargin"></div>
+  </div>
+  <div class="sc-body" id="fullScorecard"></div>
+  <div class="end-actions">
+    <button class="share-btn sb-img" id="shareImgBtn">📸 Share Scorecard Image</button>
+    <button class="share-btn sb-wa" id="shareWaBtn">💬 Share on WhatsApp</button>
+    <button class="share-btn sb-new" id="backToTournBtn" style="display:none;background:rgba(181,240,0,0.08);color:var(--lime);border:1px solid rgba(181,240,0,0.22);">🏆 Back to Tournament</button>
+    <button class="share-btn sb-new" id="newMatchBtn2">+ New Match</button>
+  </div>
+</div>
+
+<!-- DUEL SETUP -->
+<div class="screen" id="duelSetup">
+  <div class="page-hdr">
+    <button class="back-btn" id="duelBack">←</button>
+    <div class="page-ttl">DUEL</div>
+  </div>
+  <div style="padding:14px 16px 40px;overflow-y:auto;">
+    <div style="font-size:13px;color:var(--muted2);margin-bottom:22px;line-height:1.6;">One batter at a time. Score your own runs, then swap. Highest score wins.</div>
+
+    <div class="field">
+      <div class="field-lbl">Player 1 Name</div>
+      <input class="inp" id="duelP1" placeholder="e.g. You" maxlength="20" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <div class="field-lbl">Player 2 Name</div>
+      <input class="inp" id="duelP2" placeholder="e.g. Dad" maxlength="20" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <div class="field-lbl">Balls Each</div>
+      <div class="stepper">
+        <button class="stepper-btn" id="duelBallsDn">−</button>
+        <div class="stepper-val" id="duelBallsVal">12</div>
+        <button class="stepper-btn" id="duelBallsUp">+</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-lbl">Lives (Wickets)</div>
+      <div class="stepper">
+        <button class="stepper-btn" id="duelLivesDn">−</button>
+        <div class="stepper-val" id="duelLivesVal">2</div>
+        <button class="stepper-btn" id="duelLivesUp">+</button>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-xl" id="duelStartBtn" style="margin-top:10px;">⚔️ Start Duel</button>
+  </div>
+</div>
+
+<!-- DUEL MATCH -->
+<div class="screen" id="duelMatch">
+  <div class="match-hdr" style="text-align:center;">
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;" id="duelInningLbl">Player 1 Batting</div>
+    <div class="score-display">
+      <div class="score-runs" id="duelRuns">0</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item">Balls <span id="duelBallsLeft">—</span></div>
+      <div class="meta-item">Lives <span id="duelLivesLeft">—</span></div>
+      <div class="meta-item" id="duelNeedMeta" style="display:none;">Need <span id="duelNeed">—</span></div>
+    </div>
+    <div class="target-strip" id="duelTargetStrip"></div>
+  </div>
+
+  <div class="ball-strip" id="duelBallStrip"></div>
+
+  <!-- Current batter card -->
+  <div class="scard" style="margin:8px 12px 0;">
+    <div class="scard-head">
+      <div class="scard-lbl" id="duelBatterLbl">🏏 Batting</div>
+      <div class="scard-sub" id="duelSRLbl">SR —</div>
+    </div>
+    <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:22px;font-weight:800;color:var(--lime);" id="duelBatterName">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;" id="duelBatterMeta">0 balls · 0×4 · 0×6</div>
+      </div>
+      <div style="font-family:var(--mono);font-size:46px;font-weight:700;color:var(--text);" id="duelBatterRuns">0</div>
+    </div>
+  </div>
+
+  <!-- Lives display -->
+  <div class="prtn" style="margin:6px 12px 0;">
+    <div>
+      <div class="prtn-lbl">Lives Remaining</div>
+      <div class="prtn-b" id="duelLivesDisplay">● ●</div>
+    </div>
+    <div class="prtn-r" id="duelLivesCount">2</div>
+  </div>
+
+  <!-- Scoring panel -->
+  <div class="score-panel" style="margin:8px 12px 0;">
+    <div class="score-panel-lbl">Score a Ball</div>
+    <div class="runs-grid">
+      <button class="run-btn rb0" id="duelRb0">•</button>
+      <button class="run-btn rb1" id="duelRb1">1</button>
+      <button class="run-btn rb2" id="duelRb2">2</button>
+      <button class="run-btn rb3" id="duelRb3">3</button>
+      <button class="run-btn rb4" id="duelRb4">4</button>
+      <button class="run-btn rb6" id="duelRb6">6</button>
+    </div>
+    <div class="extras-grid">
+      <button class="extra-btn" id="duelWide">Wide +1</button>
+      <button class="extra-btn" id="duelNb">No Ball</button>
+      <button class="extra-btn" id="duelBye">Bye +1</button>
+    </div>
+    <div class="wkt-btn-wrap">
+      <button class="btn btn-red btn-lg" id="duelWkt">🔴 OUT! (−1 Life)</button>
+    </div>
+    <div class="undo-wrap">
+      <button class="undo-btn" id="duelUndo">↩ Undo Last Ball</button>
+    </div>
+  </div>
+</div>
+
+<!-- DUEL END -->
+<div class="screen" id="duelEnd">
+  <div class="end-hero" id="duelEndHero">
+    <div class="end-trophy" id="duelTrophy">⚔️</div>
+    <div class="end-rl">Duel Result</div>
+    <div class="end-winner" id="duelWinner">—</div>
+    <div class="end-margin" id="duelMarginTxt"></div>
+  </div>
+  <div style="padding:10px 12px;" id="duelScorecard"></div>
+  <div class="end-actions">
+    <button class="share-btn sb-wa" id="duelShareWa">💬 Share on WhatsApp</button>
+    <button class="share-btn sb-new" id="duelNewBtn">+ New Duel</button>
+    <button class="share-btn sb-new" id="duelHomeBtn" style="color:var(--muted2);">← Home</button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="screen" id="history">
+  <div class="page-hdr"><button class="back-btn" id="histBack">←</button><div class="page-ttl">HISTORY</div></div>
+  <div class="hist-list" id="histList"></div>
+</div>
+
+<!-- TOURNAMENT -->
+<div class="screen" id="tournament">
+  <div class="page-hdr" style="border-bottom:1px solid var(--border);padding-bottom:12px;position:sticky;top:0;z-index:11;background:rgba(6,6,16,0.97);">
+    <button class="back-btn" id="tournBack">←</button>
+    <div class="page-ttl">TOURNAMENT HUB</div>
+    <button class="btn btn-lime btn-sm" id="newTournBtn" style="margin-left:auto;">+ New</button>
+  </div>
+  <!-- no-tournament state -->
+  <div id="tournNoData" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">🏆</div>
+    <div style="font-family:var(--disp);font-size:28px;color:var(--lime);letter-spacing:2px;margin-bottom:10px;">START A TOURNAMENT</div>
+    <div style="font-size:14px;color:var(--muted);max-width:280px;margin-bottom:28px;">Set up teams, schedule fixtures, and track the full tournament with points table, caps, and NRR.</div>
+    <button class="btn btn-lime btn-lg" id="newTournBtn2" style="max-width:280px;">🏆 Create Tournament</button>
+  </div>
+  <!-- tournament data -->
+  <div id="tournData" style="display:none;flex-direction:column;flex:1;">
+    <div style="text-align:center;padding:10px 0 0;">
+      <div style="font-family:var(--disp);font-size:22px;color:var(--lime);letter-spacing:2px;" id="tournName">—</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab active" data-tab="points">Points</div>
+      <div class="tab" data-tab="fixtures">Fixtures</div>
+      <div class="tab" data-tab="orange">🟠 Orange Cap</div>
+      <div class="tab" data-tab="purple">🟣 Purple Cap</div>
+      <div class="tab" data-tab="mvp">⭐ MVP</div>
+      <div class="tab" data-tab="nrr">NRR</div>
+    </div>
+    <div class="tab-content active" id="tab-points"></div>
+    <div class="tab-content" id="tab-fixtures"></div>
+    <div class="tab-content" id="tab-orange"></div>
+    <div class="tab-content" id="tab-purple"></div>
+    <div class="tab-content" id="tab-mvp"></div>
+    <div class="tab-content" id="tab-nrr"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- Wicket -->
+<div class="modal-overlay" id="wicketModal">
+  <div class="modal-box">
+    <div class="modal-ttl">WICKET! 🔴</div>
+    <div class="modal-sub">Who got out and how?</div>
+    <select class="sel" id="wktBatter" style="margin-bottom:10px;"></select>
+    <select class="sel" id="wktType" style="margin-bottom:10px;">
+      <option>Bowled</option><option>Caught</option><option>Run Out</option>
+      <option>LBW</option><option>Stumped</option><option>Hit Wicket</option>
+    </select>
+    <select class="sel" id="nextBatter" style="margin-bottom:16px;"></select>
+    <button class="btn btn-lime btn-xl" id="wktConfirm" style="margin-bottom:9px;">Confirm Wicket</button>
+    <button class="undo-btn" id="wktCancel">Cancel</button>
+  </div>
+</div>
+<!-- Bowler -->
+<div class="modal-overlay" id="bowlerModal">
+  <div class="modal-box">
+    <div class="modal-ttl">NEW OVER ⚡</div>
+    <div class="modal-sub" id="bowlerModalSub">Choose next bowler</div>
+    <select class="sel" id="nextBowlerSel" style="margin-bottom:16px;"></select>
+    <button class="btn btn-lime btn-xl" id="bowlerConfirm">Confirm</button>
+  </div>
+</div>
+<!-- Innings Break -->
+<div class="modal-overlay" id="innBreakModal">
+  <div class="modal-box center">
+    <div style="font-size:48px;margin-bottom:10px;">🔄</div>
+    <div class="modal-ttl">INNINGS BREAK</div>
+    <div class="modal-sub" id="innBreakSub">—</div>
+    <div style="font-family:var(--disp);font-size:52px;color:var(--gold);text-shadow:0 0 24px var(--gold-glow);margin:8px 0;" id="innBreakTarget">—</div>
+    <div style="color:var(--muted2);font-size:13px;margin-bottom:18px;" id="innBreakMsg">—</div>
+    <select class="sel" id="inn2O1" style="margin-bottom:9px;text-align:left;"></select>
+    <select class="sel" id="inn2O2" style="margin-bottom:9px;text-align:left;"></select>
+    <select class="sel" id="inn2Bowl" style="margin-bottom:16px;text-align:left;"></select>
+    <button class="btn btn-lime btn-xl" id="inn2Start">Start 2nd Innings 🏏</button>
+  </div>
+</div>
+<!-- QR Modal -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-box">
+    <div class="modal-ttl">📡 SPECTATOR VIEW</div>
+    <div class="modal-sub">Share this QR — spectators can follow the live score on their phones, no account needed.</div>
+    <div class="qr-wrap" id="qrContainer"></div>
+    <div class="qr-link" id="qrLinkText">—</div>
+    <button class="copy-link-btn" id="copyLinkBtn">📋 Copy Link</button>
+    <button class="undo-btn" id="qrCloseBtn" style="margin-top:10px;width:100%;">Close</button>
+  </div>
+</div>
+<!-- Tournament Match: Enter Players Modal -->
+<div class="modal-overlay" id="tournMatchModal">
+  <div class="modal-box">
+    <div class="modal-ttl">🏏 START FIXTURE</div>
+    <div class="modal-sub" id="tournMatchSub">Enter players for both teams</div>
+
+    <div class="tm-team-section">
+      <div class="tm-team-hdr">
+        <span class="tm-team-badge tm-badge-a">Team A</span>
+        <span class="tm-team-name" id="tmTeamAName">—</span>
+      </div>
+      <div class="tm-player-hint" id="tmHintA">Enter player names (one per line = one player)</div>
+      <div id="tmPlayersA"></div>
+    </div>
+
+    <div class="tm-team-section">
+      <div class="tm-team-hdr">
+        <span class="tm-team-badge tm-badge-b">Team B</span>
+        <span class="tm-team-name" id="tmTeamBName">—</span>
+      </div>
+      <div class="tm-player-hint" id="tmHintB">Enter player names</div>
+      <div id="tmPlayersB"></div>
+    </div>
+
+    <button class="btn btn-lime btn-xl" id="tmStartBtn" style="margin-bottom:9px;">🏏 Go to Toss</button>
+    <button class="undo-btn" id="tmCancelBtn" style="width:100%;">Cancel</button>
+  </div>
+</div>
+
+<!-- Tournament Setup Modal -->
+<div class="modal-overlay" id="tournSetupModal">
+  <div class="modal-box">
+    <div class="modal-ttl">NEW TOURNAMENT 🏆</div>
+    <div class="modal-sub">Set up your tournament</div>
+    <div class="field"><div class="field-lbl">Tournament Name</div><input class="inp" id="tournNameInp" placeholder="e.g. Society Premier League" autocomplete="off"/></div>
+    <div class="field">
+      <div class="field-lbl">Teams</div>
+      <div class="tourn-team-add">
+        <input class="inp" id="tournTeamInp" placeholder="Team name" autocomplete="off"/>
+        <button class="btn btn-ghost btn-sm" id="addTeamBtn">+ Add</button>
+      </div>
+      <div id="tournTeamChips"></div>
+    </div>
+    <div class="row2" style="margin-bottom:16px;">
+      <div class="field" style="margin-bottom:0;">
+        <div class="field-lbl">Overs/Match</div>
+        <div class="stepper"><button class="stepper-btn" id="tOvDn">−</button><div class="stepper-val" id="tOvVal">5</div><button class="stepper-btn" id="tOvUp">+</button></div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <div class="field-lbl">Wickets</div>
+        <div class="stepper"><button class="stepper-btn" id="tWkDn">−</button><div class="stepper-val" id="tWkVal">2</div><button class="stepper-btn" id="tWkUp">+</button></div>
+      </div>
+    </div>
+    <button class="btn btn-lime btn-xl" id="createTournBtn" style="margin-bottom:9px;">Create Tournament</button>
+    <button class="undo-btn" id="tournCancelBtn" style="width:100%;">Cancel</button>
+  </div>
+</div>
+<!-- Spectator View (live score page embedded in modal) -->
+<div class="modal-overlay" id="spectatorModal">
+  <div class="modal-box" style="border-radius:20px;margin:16px;max-height:80vh;overflow-y:auto;">
+    <div class="modal-ttl">📡 LIVE SCORE</div>
+    <div id="spectatorContent"></div>
+    <button class="undo-btn" id="spectatorClose" style="width:100%;margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<div id="share-card"></div>
+
+<script>
+// ════ STATE ════
+let G = {};
+let T = null; // Tournament
+let _bowlerCb = null;
+let _matchId = null;
+let _specInterval = null;
+
+function freshG() {
+  return {
+    format:'overs', overs:5, wickets:2, targetRuns:30,
+    teams:[{name:'Team A',players:[]},{name:'Team B',players:[]}],
+    battingFirst:null, innings:0,
+    inningsData:[null,null], current:null,
+    matchId: 'M' + Date.now(),
+    date:new Date().toISOString()
+  };
+}
+function freshInn(bIdx,fIdx){
+  return {
+    bIdx,fIdx,runs:0,wickets:0,balls:0,extras:0,
+    history:[],currentOver:[],overHistory:[],
+    batters:G.teams[bIdx].players.map(n=>({name:n,runs:0,balls:0,fours:0,sixes:0,out:false,dismissal:''})),
+    bowlers:G.teams[fIdx].players.map(n=>({name:n,overs:0,balls:0,runs:0,wickets:0})),
+    strikerIdx:0,nonStrikerIdx:1,bowlerIdx:null,
+    partnership:{runs:0,balls:0},fow:[],_snap:null
+  };
+}
+
+// ════ HELPERS ════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function saveLiveScore(){if(!G.current)return;localStorage.setItem('criksy_live_'+G.matchId,JSON.stringify({G,ts:Date.now()}));}
+
+// ════ SETUP ════
+let sStep=0,sFmt='overs',sOv=5,sWk=2,sTg=30;
+
+function initSetup(){G=freshG();sStep=0;sFmt='overs';sOv=5;sWk=2;sTg=30;document.getElementById('teamA').value='';document.getElementById('teamB').value='';document.getElementById('ovVal').textContent=5;document.getElementById('wkVal').textContent=2;document.getElementById('tgVal').textContent=30;document.querySelectorAll('.fmt-card').forEach(c=>c.classList.toggle('sel',c.dataset.fmt==='overs'));updateFmtUI();goStep(0);}
+
+function updateFmtUI(){const t=sFmt==='target';document.getElementById('oversRow').style.display=t?'none':'grid';document.getElementById('targetRow').style.display=t?'block':'none';}
+
+function goStep(n){sStep=n;document.querySelectorAll('.step-panel').forEach((p,i)=>p.classList.toggle('active',i===n));['sd0','sd1','sd2'].forEach((id,i)=>{const d=document.getElementById(id);d.classList.toggle('on',i===n);d.classList.toggle('done',i<n);});}
+
+// Format selection
+document.getElementById('fmtGrid').addEventListener('click',e=>{
+  const c=e.target.closest('.fmt-card');if(!c)return;
+  sFmt=c.dataset.fmt;
+  document.querySelectorAll('.fmt-card').forEach(x=>x.classList.remove('sel'));
+  c.classList.add('sel');updateFmtUI();
+});
+
+// ── FIX: Steppers use simple click handlers, display only (no hidden input)
+function mkStepper(dnId,upId,valId,getter,setter,min,max,step){
+  document.getElementById(dnId).addEventListener('click',()=>{setter(Math.max(min,getter()-step));document.getElementById(valId).textContent=getter();});
+  document.getElementById(upId).addEventListener('click',()=>{setter(Math.min(max,getter()+step));document.getElementById(valId).textContent=getter();});
+}
+mkStepper('ovDn','ovUp','ovVal',()=>sOv,v=>{sOv=v;},1,50,1);
+mkStepper('wkDn','wkUp','wkVal',()=>sWk,v=>{sWk=v;},1,10,1);
+mkStepper('tgDn','tgUp','tgVal',()=>sTg,v=>{sTg=v;},5,500,5);
+// Tournament steppers
+let tOv=5,tWk=2;
+mkStepper('tOvDn','tOvUp','tOvVal',()=>tOv,v=>{tOv=v;},1,50,1);
+mkStepper('tWkDn','tWkUp','tWkVal',()=>tWk,v=>{tWk=v;},1,10,1);
+
+document.getElementById('step0Next').addEventListener('click',()=>{
+  const tA=document.getElementById('teamA').value.trim();
+  const tB=document.getElementById('teamB').value.trim();
+  if(!tA||!tB){toast('Enter both team names!');return;}
+  G.teams[0].name=tA;G.teams[1].name=tB;
+  G.format=sFmt;G.overs=sOv;G.wickets=sWk;G.targetRuns=sTg;
+  buildPlayers();goStep(1);
+});
+
+function buildPlayers(){
+  const c=document.getElementById('playersContainer');c.innerHTML='';
+  const needed=G.wickets+1;
+  [0,1].forEach(ti=>{
+    const h=document.createElement('div');h.className='team-hdr';
+    h.innerHTML=`<div class="team-dot ${ti===0?'ta-dot':'tb-dot'}"></div><div class="team-name-lbl">${G.teams[ti].name}</div>`;
+    c.appendChild(h);
+    for(let i=0;i<needed;i++){
+      const row=document.createElement('div');row.className='p-row';
+      row.innerHTML=`<div class="p-num">${i+1}</div><input class="p-inp" id="p${ti}${i}" placeholder="Player ${i+1}" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" value="${G.teams[ti].players[i]||''}"/>`;
+      c.appendChild(row);
+    }
+  });
+}
+
+document.getElementById('step1Next').addEventListener('click',()=>{
+  const needed=G.wickets+1;
+  for(let ti=0;ti<2;ti++){
+    const names=[];
+    for(let i=0;i<needed;i++){const v=document.getElementById(`p${ti}${i}`).value.trim();if(!v){toast(`Fill all ${G.teams[ti].name} players!`);return;}names.push(v);}
+    G.teams[ti].players=names;
+  }
+  buildReview();goStep(2);
+});
+
+function buildReview(){
+  const fmtMap={overs:'Overs',target:'Target',lastman:'Last Man Stands',pairs:'Pairs'};
+  const det=G.format==='target'?`Target: ${G.targetRuns} runs`:`${G.overs} overs · ${G.wickets} wickets`;
+  document.getElementById('reviewContent').innerHTML=`
+    <div class="scard" style="margin:0 0 16px;">
+      <div style="padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-family:var(--disp);font-size:24px;color:var(--lime);">${G.teams[0].name}</div>
+          <div style="color:var(--muted);font-size:12px;">vs</div>
+          <div style="font-family:var(--disp);font-size:24px;color:var(--blue);">${G.teams[1].name}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:14px;">${fmtMap[G.format]} · ${det}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div><div style="font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px;font-weight:600;">${G.teams[0].name}</div>${G.teams[0].players.map(p=>`<div style="font-size:13px;padding:3px 0;">${p}</div>`).join('')}</div>
+          <div><div style="font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px;font-weight:600;">${G.teams[1].name}</div>${G.teams[1].players.map(p=>`<div style="font-size:13px;padding:3px 0;">${p}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+document.getElementById('step2Next').addEventListener('click', ()=>showTossScreen('match'));
+document.getElementById('setupBack').addEventListener('click',()=>showScreen('splash'));
+
+// ════ TOSS ════
+// Shared toss state — works for both normal matches and Duel
+let _tossCallerIdx = null; // which team/player called (0 or 1)
+let _tossSide = null;      // 'heads' or 'tails'
+let _tossFlipped = false;
+let _tossFlipResult = null;
+let _tossWinnerIdx = null;
+let batFirst = null;
+let _tossMode = 'match'; // 'match' or 'duel'
+
+function tossGoStep(n) {
+  const panels = ['tp0','tp1','tp2','tp3'];
+  const dots   = ['tsd0','tsd1','tsd2','tsd3'];
+  panels.forEach((id,i) => {
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', i===n);
+  });
+  dots.forEach((id,i) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('active', i===n);
+    el.classList.toggle('done', i<n);
+  });
+}
+
+function showTossScreen(mode) {
+  _tossMode = mode || 'match';
+  _tossCallerIdx = null; _tossSide = null; _tossFlipped = false;
+  _tossFlipResult = null; _tossWinnerIdx = null; batFirst = null;
+
+  const names = _tossMode === 'duel'
+    ? [D.p1, D.p2]
+    : [G.teams[0].name, G.teams[1].name];
+
+  // Panel 0: caller buttons
+  document.getElementById('tossCallerA').textContent = names[0];
+  document.getElementById('tossCallerB').textContent = names[1];
+  document.getElementById('tossCallerA').classList.remove('selected');
+  document.getElementById('tossCallerB').classList.remove('selected');
+
+  // Panel 3: bat-first buttons
+  document.getElementById('bfAName').textContent = names[0];
+  document.getElementById('bfBName').textContent = names[1];
+  document.getElementById('bfA').classList.remove('selected');
+  document.getElementById('bfB').classList.remove('selected');
+  document.getElementById('startMatchBtn').disabled = true;
+  document.getElementById('startMatchBtn').textContent =
+    _tossMode === 'duel' ? '⚔️ Start Duel' : '🏏 Start Match';
+
+  // Reset coin
+  const coin = document.getElementById('coin');
+  coin.style.transition = ''; coin.style.transform = 'rotateY(0deg)';
+  document.getElementById('tossResultBox').style.display = 'none';
+  document.getElementById('flipBtn').style.display = '';
+
+  showScreen('toss');
+  tossGoStep(0);
+}
+
+// Step 0 — pick caller
+document.getElementById('tossCallerA').addEventListener('click', () => {
+  _tossCallerIdx = 0;
+  document.getElementById('tossCallerA').classList.add('selected');
+  document.getElementById('tossCallerB').classList.remove('selected');
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  document.getElementById('tossCallTitle').textContent = names[0].toUpperCase() + ' CALLS';
+  document.getElementById('tossCallSub').textContent = `What does ${names[0]} call?`;
+  setTimeout(() => tossGoStep(1), 220);
+});
+document.getElementById('tossCallerB').addEventListener('click', () => {
+  _tossCallerIdx = 1;
+  document.getElementById('tossCallerB').classList.add('selected');
+  document.getElementById('tossCallerA').classList.remove('selected');
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  document.getElementById('tossCallTitle').textContent = names[1].toUpperCase() + ' CALLS';
+  document.getElementById('tossCallSub').textContent = `What does ${names[1]} call?`;
+  setTimeout(() => tossGoStep(1), 220);
+});
+
+// Step 1 — heads or tails
+document.getElementById('btnHeads').addEventListener('click', () => {
+  if(_tossFlipped) return;
+  _tossSide = 'heads';
+  document.getElementById('btnHeads').classList.add('selected');
+  document.getElementById('btnTails').classList.remove('selected');
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  document.getElementById('tossCoinTitle').textContent = 'FLIP!';
+  document.getElementById('tossCoinSub').textContent =
+    `${names[_tossCallerIdx]} called Heads — now flip!`;
+  setTimeout(() => tossGoStep(2), 220);
+});
+document.getElementById('btnTails').addEventListener('click', () => {
+  if(_tossFlipped) return;
+  _tossSide = 'tails';
+  document.getElementById('btnTails').classList.add('selected');
+  document.getElementById('btnHeads').classList.remove('selected');
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  document.getElementById('tossCoinTitle').textContent = 'FLIP!';
+  document.getElementById('tossCoinSub').textContent =
+    `${names[_tossCallerIdx]} called Tails — now flip!`;
+  setTimeout(() => tossGoStep(2), 220);
+});
+
+// Step 2 — flip
+function doFlip() {
+  if(_tossFlipped) return;
+  _tossFlipped = true;
+  const coin = document.getElementById('coin');
+  _tossFlipResult = Math.random() < 0.5 ? 'heads' : 'tails';
+  const finalRot = _tossFlipResult === 'tails' ? 1260 : 1080;
+  coin.style.transition = 'transform 1.6s cubic-bezier(0.36,0.07,0.19,0.97)';
+  coin.style.transform = `rotateY(${finalRot}deg)`;
+
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  const callerName = names[_tossCallerIdx];
+  const won = _tossFlipResult === _tossSide;
+  _tossWinnerIdx = won ? _tossCallerIdx : 1 - _tossCallerIdx;
+  const winnerName = names[_tossWinnerIdx];
+
+  setTimeout(() => {
+    coin.style.transition = '';
+    document.getElementById('flipBtn').style.display = 'none';
+    const box = document.getElementById('tossResultBox');
+    box.style.display = '';
+    document.getElementById('tossResultIcon').textContent = won ? '🎉' : '😅';
+    document.getElementById('tossResult').textContent =
+      `${_tossFlipResult.toUpperCase()}! ${won ? callerName+' called it right' : callerName+' called wrong'}. ${winnerName} won the toss!`;
+  }, 1700);
+}
+document.getElementById('coin').addEventListener('click', () => { if(!_tossFlipped) doFlip(); });
+document.getElementById('flipBtn').addEventListener('click', () => { if(!_tossFlipped) doFlip(); });
+document.getElementById('tossNextBtn').addEventListener('click', () => {
+  const names = _tossMode==='duel' ? [D.p1,D.p2] : [G.teams[0].name,G.teams[1].name];
+  const winnerName = names[_tossWinnerIdx];
+  document.getElementById('bfTitle').textContent = winnerName.toUpperCase() + ' WON!';
+  document.getElementById('bfLabel').textContent = `${winnerName} — do you want to bat or field first?`;
+  document.getElementById('bfAName').textContent = names[0];
+  document.getElementById('bfBName').textContent = names[1];
+  tossGoStep(3);
+});
+
+// Step 3 — bat first
+document.getElementById('bfA').addEventListener('click', () => {
+  batFirst = 0;
+  document.getElementById('bfA').classList.add('selected');
+  document.getElementById('bfB').classList.remove('selected');
+  document.getElementById('startMatchBtn').disabled = false;
+});
+document.getElementById('bfB').addEventListener('click', () => {
+  batFirst = 1;
+  document.getElementById('bfB').classList.add('selected');
+  document.getElementById('bfA').classList.remove('selected');
+  document.getElementById('startMatchBtn').disabled = false;
+});
+
+document.getElementById('startMatchBtn').addEventListener('click', () => {
+  if(batFirst === null) { toast('Pick who bats first!'); return; }
+  if(_tossMode === 'duel') {
+    // Duel: player at batFirst index bats first
+    D._batFirstIdx = batFirst;
+    D.innings = batFirst === 0 ? 0 : 1; // if p2 bats first, swap innings order
+    if(batFirst !== 0) {
+      // swap so p2 goes first then p1 chases
+      const tmp = D.scores[0]; D.scores[0] = D.scores[1]; D.scores[1] = tmp;
+      D._swapped = true;
+    }
+    showScreen('duelMatch');
+    renderDuel();
+  } else {
+    G.battingFirst = batFirst; G.innings = 0; G.inningsData = [null,null];
+    const inn = freshInn(batFirst, 1-batFirst);
+    G.inningsData[0] = inn; G.current = inn;
+    openBowlerModal(() => { showScreen('match'); renderMatch(); saveLiveScore(); });
+  }
+});
+
+// ════ MATCH ENGINE ════
+function recordBall(ball){
+  const c=G.current;const bowler=c.bowlers[c.bowlerIdx];const striker=c.batters[c.strikerIdx];
+  c._snap=JSON.stringify({runs:c.runs,wickets:c.wickets,balls:c.balls,extras:c.extras,history:[...c.history],currentOver:[...c.currentOver],strikerIdx:c.strikerIdx,nonStrikerIdx:c.nonStrikerIdx,partnership:{...c.partnership},striker:{...striker},bowler:{...bowler}});
+  c.runs+=ball.runs;bowler.runs+=ball.runs;
+  if(ball.extra==='wide'||ball.extra==='nb'){c.extras+=ball.runs;c.currentOver.push({...ball});c.history.push({...ball});c.partnership.runs+=ball.runs;checkInningsEnd();renderMatch();saveLiveScore();return;}
+  c.balls++;bowler.balls++;striker.balls++;striker.runs+=ball.runs;
+  if(ball.type==='boundary')striker.fours++;if(ball.type==='six')striker.sixes++;
+  c.partnership.runs+=ball.runs;c.partnership.balls++;
+  if(ball.runs%2===1){const t=c.strikerIdx;c.strikerIdx=c.nonStrikerIdx;c.nonStrikerIdx=t;}
+  const lbl=ball.runs===0?'•':String(ball.runs);
+  c.currentOver.push({...ball,label:lbl});c.history.push({...ball});
+  const legal=c.currentOver.filter(b=>!b.extra||b.extra==='bye').length;
+  if(legal>=6){finishOver();return;}
+  checkInningsEnd();renderMatch();saveLiveScore();
+}
+function finishOver(){
+  const c=G.current;const b=c.bowlers[c.bowlerIdx];b.overs++;b.balls=0;
+  c.overHistory.push([...c.currentOver]);c.currentOver=[];
+  const t=c.strikerIdx;c.strikerIdx=c.nonStrikerIdx;c.nonStrikerIdx=t;
+  const done=Math.floor(c.balls/6);
+  if(G.format!=='target'&&done>=G.overs){endInnings();return;}
+  openBowlerModal(()=>{checkInningsEnd();renderMatch();saveLiveScore();});
+}
+function checkInningsEnd(){
+  const c=G.current;
+  if(c.wickets>=G.wickets){endInnings();return;}
+  if(G.format!=='target'&&c.balls>=G.overs*6){endInnings();return;}
+  if(G.innings===1&&G.inningsData[0]){const tgt=G.inningsData[0].runs+1;if(c.runs>=tgt){endMatch();return;}}
+  if(G.format==='target'&&G.innings===1&&c.runs>=G.targetRuns){endMatch();return;}
+}
+function endInnings(){
+  if(G.innings===0){
+    const tgt=G.current.runs+1;
+    document.getElementById('innBreakTarget').textContent=tgt;
+    const chaser=G.teams[1-G.battingFirst].name;
+    document.getElementById('innBreakSub').textContent=`${G.teams[G.battingFirst].name} set ${G.current.runs}/${G.current.wickets}`;
+    document.getElementById('innBreakMsg').textContent=`${chaser} need ${tgt} to win`;
+    const b2=1-G.battingFirst,f2=G.battingFirst;
+    const batters=G.teams[b2].players,bowlers=G.teams[f2].players;
+    ['inn2O1','inn2O2'].forEach((id,i)=>{const s=document.getElementById(id);s.innerHTML=`<option value="">Opener ${i+1}</option>`+batters.map((p,j)=>`<option value="${j}">${p}</option>`).join('');});
+    const bs=document.getElementById('inn2Bowl');bs.innerHTML=`<option value="">Opening Bowler</option>`+bowlers.map((p,j)=>`<option value="${j}">${p}</option>`).join('');
+    openModal('innBreakModal');
+  } else {endMatch();}
+}
+document.getElementById('inn2Start').addEventListener('click',()=>{
+  const o1=parseInt(document.getElementById('inn2O1').value);const o2=parseInt(document.getElementById('inn2O2').value);const bw=document.getElementById('inn2Bowl').value;
+  if(isNaN(o1)||isNaN(o2)){toast('Pick 2 openers!');return;}if(o1===o2){toast('Pick different openers!');return;}if(bw===''){toast('Pick opening bowler!');return;}
+  closeModal('innBreakModal');G.innings=1;
+  const inn=freshInn(1-G.battingFirst,G.battingFirst);
+  inn.strikerIdx=o1;inn.nonStrikerIdx=o2;inn.bowlerIdx=parseInt(bw);
+  G.inningsData[1]=inn;G.current=inn;renderMatch();saveLiveScore();
+});
+function endMatch(){saveLiveScore();saveHistory();showEndScreen();launchConfetti();if(T)updateTournamentWithMatch();}
+
+// ════ WICKET ════
+document.getElementById('wktBtn').addEventListener('click',()=>{
+  const c=G.current;
+  document.getElementById('wktBatter').innerHTML=[c.strikerIdx,c.nonStrikerIdx].map(i=>`<option value="${i}">${c.batters[i].name}</option>`).join('');
+  document.getElementById('nextBatter').innerHTML=`<option value="">Next batter</option>`+c.batters.map((b,i)=>b.out||i===c.strikerIdx||i===c.nonStrikerIdx?'':
+    `<option value="${i}">${b.name}</option>`).join('');
+  openModal('wicketModal');
+});
+document.getElementById('wktConfirm').addEventListener('click',()=>{
+  const c=G.current;const outIdx=parseInt(document.getElementById('wktBatter').value);const wType=document.getElementById('wktType').value;const nxt=document.getElementById('nextBatter').value;
+  const out=c.batters[outIdx];out.out=true;out.dismissal=wType;
+  c.wickets++;c.balls++;c.bowlers[c.bowlerIdx].balls++;c.bowlers[c.bowlerIdx].wickets++;
+  c.fow.push({score:c.runs,wickets:c.wickets,name:out.name});
+  c.currentOver.push({runs:0,type:'wicket',label:'W'});c.history.push({runs:0,type:'wicket'});
+  c.partnership={runs:0,balls:0};
+  if(c.wickets>=G.wickets){closeModal('wicketModal');endInnings();return;}
+  if(nxt!==''){const ni=parseInt(nxt);if(outIdx===c.strikerIdx)c.strikerIdx=ni;else c.nonStrikerIdx=ni;}
+  const legal=c.currentOver.filter(b=>!b.extra||b.extra==='bye').length;
+  if(legal>=6){closeModal('wicketModal');finishOver();return;}
+  closeModal('wicketModal');checkInningsEnd();renderMatch();saveLiveScore();
+});
+document.getElementById('wktCancel').addEventListener('click',()=>closeModal('wicketModal'));
+
+// ════ BOWLER MODAL ════
+function openBowlerModal(cb){
+  _bowlerCb=cb;const c=G.current;const prev=c.bowlerIdx;
+  document.getElementById('nextBowlerSel').innerHTML=`<option value="">Choose bowler</option>`+c.bowlers.map((b,i)=>i===prev?'':
+    `<option value="${i}">${b.name} (${b.overs}ov ${b.runs}r ${b.wickets}w)</option>`).join('');
+  document.getElementById('bowlerModalSub').textContent=prev!==null?'Choose next bowler':'Choose opening bowler';
+  openModal('bowlerModal');
+}
+document.getElementById('bowlerConfirm').addEventListener('click',()=>{
+  const v=document.getElementById('nextBowlerSel').value;if(!v){toast('Pick a bowler!');return;}
+  G.current.bowlerIdx=parseInt(v);closeModal('bowlerModal');if(_bowlerCb){_bowlerCb();_bowlerCb=null;}
+});
+
+// ════ RUN BUTTONS ════
+document.getElementById('rb0').addEventListener('click',()=>recordBall({runs:0,type:'dot'}));
+document.getElementById('rb1').addEventListener('click',()=>recordBall({runs:1,type:'run'}));
+document.getElementById('rb2').addEventListener('click',()=>recordBall({runs:2,type:'run'}));
+document.getElementById('rb3').addEventListener('click',()=>recordBall({runs:3,type:'run'}));
+document.getElementById('rb4').addEventListener('click',()=>recordBall({runs:4,type:'boundary'}));
+document.getElementById('rb6').addEventListener('click',()=>recordBall({runs:6,type:'six'}));
+document.getElementById('wideBtn').addEventListener('click',()=>recordBall({runs:1,type:'extra',extra:'wide',label:'Wd'}));
+document.getElementById('nbBtn').addEventListener('click',()=>recordBall({runs:1,type:'extra',extra:'nb',label:'NB'}));
+document.getElementById('byeBtn').addEventListener('click',()=>recordBall({runs:1,type:'extra',extra:'bye'}));
+
+// ════ UNDO ════
+document.getElementById('undoBtn').addEventListener('click',()=>{
+  const c=G.current;if(!c._snap){toast('Nothing to undo!');return;}
+  const s=JSON.parse(c._snap);Object.assign(c,s);c._snap=null;renderMatch();toast('Last ball undone ↩');
+});
+
+// ════ RENDER ════
+function chipCls(b){if(b.type==='wicket')return'bc-w';if(b.extra==='wide')return'bc-wd';if(b.extra==='nb')return'bc-nb';if(b.runs===0)return'bc-dot';if(b.runs===4)return'bc-4';if(b.runs===6)return'bc-6';if(b.runs===1)return'bc-1';if(b.runs===2)return'bc-2';return'bc-3';}
+function renderMatch(){
+  const c=G.current;const ov=Math.floor(c.balls/6),rem=c.balls%6;const rr=c.balls>0?((c.runs/c.balls)*6).toFixed(2):'0.00';
+  document.getElementById('batTeamLbl').textContent=G.teams[c.bIdx].name;
+  document.getElementById('fldTeamLbl').textContent=G.teams[c.fIdx].name;
+  document.getElementById('liveRuns').textContent=c.runs;document.getElementById('liveWkts').textContent='/'+c.wickets;
+  document.getElementById('liveOvers').textContent=ov+'.'+rem;document.getElementById('liveRR').textContent=rr;
+  document.getElementById('innLbl').textContent=G.innings===0?'1st Inn':'2nd Inn';
+  document.getElementById('overLbl').textContent='Over '+(ov+1);
+  if(G.innings===1&&G.inningsData[0]){
+    const tgt=G.inningsData[0].runs+1;const need=tgt-c.runs;const bl=Math.max(0,(G.overs*6)-c.balls);const rrr=bl>0?((need/bl)*6).toFixed(2):'∞';
+    document.getElementById('targetStrip').textContent=`Target ${tgt} · Need ${need} off ${bl}b · RRR ${rrr}`;
+    document.getElementById('targetStrip').classList.add('show');document.getElementById('needMeta').style.display='';
+    document.getElementById('liveNeed').textContent=need+'off'+bl+'b';
+  }
+  // Ball strip
+  const strip=document.getElementById('ballStrip');strip.innerHTML='';
+  c.overHistory.forEach((over,oi)=>{if(oi>0){const s=document.createElement('div');s.className='over-sep';strip.appendChild(s);}over.forEach(b=>{const ch=document.createElement('div');ch.className='bc '+chipCls(b);ch.textContent=b.label||'•';strip.appendChild(ch);});});
+  if(c.overHistory.length>0&&c.currentOver.length>0){const s=document.createElement('div');s.className='over-sep';strip.appendChild(s);}
+  c.currentOver.forEach(b=>{const ch=document.createElement('div');ch.className='bc '+chipCls(b);ch.textContent=b.label||'•';strip.appendChild(ch);});
+  strip.scrollLeft=strip.scrollWidth;
+  // Batting
+  const br=document.getElementById('batRows');br.innerHTML='';
+  [c.strikerIdx,c.nonStrikerIdx].forEach((idx,role)=>{
+    const b=c.batters[idx];const sr=b.balls>0?((b.runs/b.balls)*100).toFixed(0):'—';
+    const row=document.createElement('div');row.className='bat-row';
+    row.innerHTML=`<div class="bat-name ${role===0?'striker':''}">${role===0?'<span class="striker-dot"></span>':''}${b.name}</div><div class="bat-stat r">${b.runs}</div><div class="bat-stat">${b.balls}</div><div class="bat-stat">${b.fours}</div><div class="bat-stat">${sr}</div>`;
+    br.appendChild(row);
+  });
+  document.getElementById('prtnRuns').textContent=c.partnership.runs;document.getElementById('prtnBalls').textContent=c.partnership.balls+' balls';
+  // Bowling
+  const bwr=document.getElementById('bowlRows');bwr.innerHTML='';
+  c.bowlers.filter((b,i)=>b.balls>0||b.overs>0||i===c.bowlerIdx).forEach(b=>{
+    const eco=(b.overs+b.balls/6)>0?(b.runs/(b.overs+b.balls/6)).toFixed(1):'—';
+    const isCurr=c.bowlers.indexOf(b)===c.bowlerIdx;
+    const row=document.createElement('div');row.className='bowl-row';
+    row.innerHTML=`<div class="bowl-name ${isCurr?'bowling':''}">${b.name}</div><div class="bowl-stat">${b.overs}.${b.balls}</div><div class="bowl-stat">${b.runs}</div><div class="bowl-stat">${b.wickets}</div><div class="bowl-stat">${eco}</div>`;
+    bwr.appendChild(row);
+  });
+}
+
+// ════ QR / SPECTATOR ════
+document.getElementById('qrShowBtn').addEventListener('click',()=>{
+  saveLiveScore();
+  const link=window.location.href.split('?')[0]+'?spectate='+G.matchId;
+  document.getElementById('qrLinkText').textContent=link;
+  const wrap=document.getElementById('qrContainer');wrap.innerHTML='';
+  if(typeof QRCode!=='undefined'){
+    new QRCode(wrap,{text:link,width:200,height:200,colorDark:'#0a0a1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  } else {wrap.textContent='QR unavailable offline';}
+  openModal('qrModal');
+});
+document.getElementById('qrCloseBtn').addEventListener('click',()=>closeModal('qrModal'));
+document.getElementById('copyLinkBtn').addEventListener('click',()=>{
+  const link=document.getElementById('qrLinkText').textContent;
+  navigator.clipboard.writeText(link).then(()=>toast('Link copied! 📋')).catch(()=>toast('Copy: '+link));
+});
+
+// Check if opened as spectator
+function checkSpectator(){
+  const params=new URLSearchParams(window.location.search);const matchId=params.get('spectate');
+  if(!matchId)return;
+  const data=localStorage.getItem('criksy_live_'+matchId);
+  if(!data){document.getElementById('spectatorContent').innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);">Match not found or ended.</div>';openModal('spectatorModal');return;}
+  const parsed=JSON.parse(data);G=parsed.G;renderSpectator();openModal('spectatorModal');
+  if(_specInterval)clearInterval(_specInterval);
+  _specInterval=setInterval(()=>{const d=localStorage.getItem('criksy_live_'+matchId);if(d){const p=JSON.parse(d);G=p.G;renderSpectator();}},5000);
+}
+function renderSpectator(){
+  const c=G.current;if(!c){document.getElementById('spectatorContent').innerHTML='<div>Match ended.</div>';return;}
+  const ov=Math.floor(c.balls/6)+'.'+c.balls%6;const rr=c.balls>0?((c.runs/c.balls)*6).toFixed(2):'0.00';
+  let html=`<div style="text-align:center;padding:16px 0;">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${G.teams[c.bIdx].name} batting</div>
+    <div style="font-family:var(--disp);font-size:56px;line-height:1;">${c.runs}<span style="font-size:32px;color:var(--muted);">/${c.wickets}</span></div>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--muted2);margin-top:4px;">${ov} ov · RR ${rr}</div>`;
+  if(G.innings===1&&G.inningsData[0]){const tgt=G.inningsData[0].runs+1;const need=tgt-c.runs;html+=`<div style="color:var(--blue);font-size:13px;margin-top:6px;">Target ${tgt} · Need ${need}</div>`;}
+  html+=`</div><div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;">Updates every 5 seconds</div>`;
+  document.getElementById('spectatorContent').innerHTML=html;
+}
+document.getElementById('spectatorClose').addEventListener('click',()=>{closeModal('spectatorModal');if(_specInterval){clearInterval(_specInterval);_specInterval=null;}});
+
+// ════ END SCREEN ════
+function showEndScreen(){
+  showScreen('end');
+  const i0=G.inningsData[0],i1=G.inningsData[1];let winner='',margin='';
+  if(!i1){winner=G.teams[i0.bIdx].name;margin=`Set ${i0.runs}/${i0.wickets}`;}
+  else{const tgt=i0.runs+1;if(i1.runs>=tgt){winner=G.teams[i1.bIdx].name;const wl=G.wickets-i1.wickets;margin=`Won by ${wl} wicket${wl!==1?'s':''}`;}
+  else{winner=G.teams[i0.bIdx].name;const d=tgt-i1.runs-1;margin=`Won by ${d} run${d!==1?'s':''}`;}}
+  document.getElementById('endWinner').textContent=winner;document.getElementById('endMargin').textContent=margin;
+
+  // Show "Back to Tournament" if this match was started from a fixture
+  const isTournMatch = G._tournFixtureIdx !== undefined && G._tournFixtureIdx !== null;
+  document.getElementById('backToTournBtn').style.display = isTournMatch ? '' : 'none';
+
+  const sc=document.getElementById('fullScorecard');sc.innerHTML='';
+  [0,1].forEach(innIdx=>{
+    const inn=G.inningsData[innIdx];if(!inn)return;
+    const tn=G.teams[inn.bIdx].name,ov=Math.floor(inn.balls/6)+'.'+inn.balls%6;
+    sc.innerHTML+=`<div class="sc-title">${tn} — ${inn.runs}/${inn.wickets} (${ov} ov)</div>`;
+    sc.innerHTML+=`<div class="sc-card"><div class="col-head" style="grid-template-columns:3fr 1fr 1fr 1fr;"><div class="col-l">Batter</div><div class="col-l">R</div><div class="col-l">B</div><div class="col-l">SR</div></div>${inn.batters.filter(b=>b.balls>0||b.runs>0).map(b=>{const sr=b.balls>0?((b.runs/b.balls)*100).toFixed(0):'—';return`<div class="sc-bat-row"><div><div class="sc-nm">${b.name}</div><div class="sc-dis">${b.out?b.dismissal:'not out'} · ${b.fours}×4 ${b.sixes}×6</div></div><div class="sc-v p">${b.runs}</div><div class="sc-v">${b.balls}</div><div class="sc-v">${sr}</div></div>`;}).join('')}<div style="padding:7px 13px;font-size:11px;color:var(--muted);font-family:var(--mono);">Extras: ${inn.extras}</div></div>`;
+    sc.innerHTML+=`<div class="sc-card">${inn.bowlers.filter(b=>b.overs>0||b.balls>0).map(b=>{const eco=(b.overs+b.balls/6)>0?(b.runs/(b.overs+b.balls/6)).toFixed(1):'—';return`<div class="sc-bowl-row"><div class="sc-nm">${b.name}</div><div class="sc-v">${b.overs}.${b.balls}</div><div class="sc-v">${b.runs}</div><div class="sc-v p">${b.wickets}</div><div class="sc-v">${eco}</div></div>`;}).join('')}</div>`;
+    if(inn.fow.length>0)sc.innerHTML+=`<div class="sc-card" style="margin-bottom:14px;"><div class="scard-head"><div class="scard-lbl">Fall of Wickets</div></div>${inn.fow.map(f=>`<div class="fow"><span class="fow-s">${f.score}/${f.wickets}</span><span>${f.name}</span></div>`).join('')}</div>`;
+  });
+}
+
+// ════ SHARE ════
+function buildWAText(){
+  let txt=`🏏 *CRIKSY SCORECARD*\n${G.teams[0].name} vs ${G.teams[1].name}\n\n`;
+  [0,1].forEach(i=>{const inn=G.inningsData[i];if(!inn)return;const ov=Math.floor(inn.balls/6)+'.'+inn.balls%6;txt+=`*${G.teams[inn.bIdx].name} — ${inn.runs}/${inn.wickets} (${ov}ov)*\n`;inn.batters.filter(b=>b.balls>0).forEach(b=>{txt+=`  ${b.name}: ${b.runs}(${b.balls}b) ${b.out?b.dismissal:'not out'}\n`;});txt+=`Bowling: `+inn.bowlers.filter(b=>b.overs>0||b.balls>0).map(b=>`${b.name} ${b.overs}.${b.balls}-${b.runs}-${b.wickets}`).join(', ')+'\n\n';});
+  txt+=`🏆 *${document.getElementById('endWinner').textContent}* — ${document.getElementById('endMargin').textContent}\n\nScored with Criksy 🏏`;
+  return txt;
+}
+document.getElementById('shareWaBtn').addEventListener('click',()=>{window.open('https://wa.me/?text='+encodeURIComponent(buildWAText()),'_blank');});
+document.getElementById('shareImgBtn').addEventListener('click',()=>{
+  toast('Generating...');
+  const card=document.getElementById('share-card');const i0=G.inningsData[0],i1=G.inningsData[1];
+  card.innerHTML=`<div style="background:#060610;color:#f0f2ff;font-family:Arial,sans-serif;padding:28px;width:420px;"><div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;font-weight:900;color:#b5f000;letter-spacing:5px;">CRIKSY</div><div style="font-size:11px;color:#6b7280;letter-spacing:2px;">STREET CRICKET SCORER</div></div><div style="text-align:center;background:#0b0b1a;border:1px solid #1a1a30;border-radius:16px;padding:18px;margin-bottom:16px;"><div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:2px;">Result</div><div style="font-size:32px;font-weight:900;color:#b5f000;margin-top:4px;">${document.getElementById('endWinner').textContent}</div><div style="font-size:13px;color:#6b7280;margin-top:4px;">${document.getElementById('endMargin').textContent}</div></div>${[i0,i1].filter(Boolean).map(inn=>{const ov=Math.floor(inn.balls/6)+'.'+inn.balls%6;return`<div style="background:#0b0b1a;border:1px solid #1a1a30;border-radius:14px;padding:16px;margin-bottom:12px;"><div style="font-weight:700;font-size:16px;margin-bottom:10px;">${G.teams[inn.bIdx].name} <span style="color:#b5f000;">${inn.runs}/${inn.wickets}</span> <span style="color:#6b7280;font-size:13px;">(${ov}ov)</span></div>${inn.batters.filter(b=>b.balls>0).map(b=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid #13132a;"><span>${b.name} <span style="color:#6b7280;font-size:11px;">${b.out?b.dismissal:'not out'}</span></span><span style="font-family:monospace;font-weight:700;">${b.runs}(${b.balls}b)</span></div>`).join('')}</div>`;}).join('')}<div style="text-align:center;color:#6b7280;font-size:11px;margin-top:8px;">Scored with Criksy 🏏</div></div>`;
+  html2canvas(card,{backgroundColor:'#060610',scale:2}).then(canvas=>{canvas.toBlob(blob=>{const f=new File([blob],'criksy-scorecard.png',{type:'image/png'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'Criksy Scorecard'});}else{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='criksy-scorecard.png';a.click();toast('Saved!');}});});
+});
+
+// ════ HISTORY ════
+function saveHistory(){
+  const h=JSON.parse(localStorage.getItem('criksy_h')||'[]');
+  h.unshift({teams:G.teams.map(t=>t.name),winner:document.getElementById('endWinner').textContent||'—',margin:document.getElementById('endMargin').textContent||'',scores:G.inningsData.filter(Boolean).map(inn=>`${G.teams[inn.bIdx].name}: ${inn.runs}/${inn.wickets}`),date:new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})});
+  localStorage.setItem('criksy_h',JSON.stringify(h.slice(0,50)));
+}
+function loadHistory(){
+  const h=JSON.parse(localStorage.getItem('criksy_h')||'[]');
+  const list=document.getElementById('histList');
+  if(!h.length){list.innerHTML='<div class="hist-empty"><span style="font-size:40px;display:block;margin-bottom:12px;">🏏</span>No matches yet. Start one!</div>';return;}
+  list.innerHTML=h.map(m=>`<div class="hist-card"><div class="hc-teams">${m.teams[0]} vs ${m.teams[1]}</div><div class="hc-winner">🏆 ${m.winner} — ${m.margin}</div><div class="hc-scores">${m.scores.join(' · ')}</div><div class="hc-date">${m.date}</div></div>`).join('');
+}
+
+// ════ TOURNAMENT ════
+let tournTeams=[];
+function initTournament(){
+  T=JSON.parse(localStorage.getItem('criksy_tourn')||'null');
+  if(T){document.getElementById('tournNoData').style.display='none';document.getElementById('tournData').style.display='flex';document.getElementById('tournName').textContent=T.name;renderTournament();}
+  else{document.getElementById('tournNoData').style.display='flex';document.getElementById('tournData').style.display='none';}
+}
+function saveTournament(){localStorage.setItem('criksy_tourn',JSON.stringify(T));}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Generate round-robin fixtures
+function genFixtures(teams){
+  const fixtures=[];
+  for(let i=0;i<teams.length;i++)for(let j=i+1;j<teams.length;j++)fixtures.push({t1:teams[i],t2:teams[j],result:null,score1:null,score2:null,status:'upcoming'});
+  return fixtures;
+}
+
+document.getElementById('addTeamBtn').addEventListener('click',()=>{
+  const inp=document.getElementById('tournTeamInp');const name=inp.value.trim();if(!name)return;
+  if(tournTeams.includes(name)){toast('Team already added!');return;}
+  tournTeams.push(name);inp.value='';renderTeamChips();
+});
+document.getElementById('tournTeamInp').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('addTeamBtn').click();}});
+
+function renderTeamChips(){
+  document.getElementById('tournTeamChips').innerHTML=tournTeams.map((t,i)=>
+    `<span class="team-chip">${t}<span class="team-chip-rm" data-i="${i}">×</span></span>`).join('');
+  document.querySelectorAll('.team-chip-rm').forEach(btn=>{btn.addEventListener('click',()=>{tournTeams.splice(parseInt(btn.dataset.i),1);renderTeamChips();});});
+}
+
+document.getElementById('createTournBtn').addEventListener('click',()=>{
+  const name=document.getElementById('tournNameInp').value.trim();if(!name){toast('Enter tournament name!');return;}if(tournTeams.length<2){toast('Add at least 2 teams!');return;}
+  T={name,teams:tournTeams,overs:tOv,wickets:tWk,fixtures:genFixtures(tournTeams),created:Date.now()};
+  saveTournament();closeModal('tournSetupModal');initTournament();toast('Tournament created! 🏆');tournTeams=[];document.getElementById('tournTeamChips').innerHTML='';document.getElementById('tournNameInp').value='';
+});
+document.getElementById('tournCancelBtn').addEventListener('click',()=>closeModal('tournSetupModal'));
+
+function renderTournament(){
+  if(!T)return;
+  renderPointsTable();renderFixtures();renderOrangeCap();renderPurpleCap();renderMVP();renderNRR();
+}
+
+function calcPoints(){
+  const pts={};T.teams.forEach(t=>{pts[t]={played:0,won:0,lost:0,tied:0,pts:0,rf:0,rb:0,ra:0,rb2:0};});
+  T.fixtures.filter(f=>f.status==='done').forEach(f=>{
+    pts[f.t1].played++;pts[f.t2].played++;
+    if(f.result==='t1'){pts[f.t1].won++;pts[f.t1].pts+=2;pts[f.t2].lost++;}
+    else if(f.result==='t2'){pts[f.t2].won++;pts[f.t2].pts+=2;pts[f.t1].lost++;}
+    else{pts[f.t1].tied++;pts[f.t2].tied++;pts[f.t1].pts++;pts[f.t2].pts++;}
+    if(f.score1){pts[f.t1].rf+=f.score1.runs;pts[f.t1].rb+=f.score1.balls;pts[f.t1].ra+=f.score2?f.score2.runs:0;}
+    if(f.score2){pts[f.t2].rf+=f.score2.runs;pts[f.t2].rb+=f.score2.balls;pts[f.t2].ra+=f.score1?f.score1.runs:0;}
+  });
+  return pts;
+}
+function nrr(p){const rr=p.rb>0?(p.rf/(p.rb/6)):0;const ra_ov=p.rb>0?p.ra/(p.rb/6):0;const n=rr-ra_ov;return(n>=0?'+':'')+n.toFixed(3);}
+
+function renderPointsTable(){
+  const pts=calcPoints();const sorted=T.teams.slice().sort((a,b)=>pts[b].pts-pts[a].pts||(pts[b].won-pts[a].won));
+  document.getElementById('tab-points').innerHTML=sorted.length?`<table class="pts-table" style="width:100%;"><thead><tr><th class="pts-th" style="text-align:left;">Team</th><th class="pts-th">P</th><th class="pts-th">W</th><th class="pts-th">L</th><th class="pts-th">Pts</th><th class="pts-th">NRR</th></tr></thead><tbody>${sorted.map((t,i)=>`<tr class="pts-tr ${i===0?'':''}"><td class="pts-td">${i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':''}${t}</td><td class="pts-td">${pts[t].played}</td><td class="pts-td">${pts[t].won}</td><td class="pts-td">${pts[t].lost}</td><td class="pts-td" style="color:var(--lime);font-weight:700;">${pts[t].pts}</td><td class="pts-td" style="${parseFloat(nrr(pts[t]))>=0?'color:var(--lime)':'color:var(--red)'}">${nrr(pts[t])}</td></tr>`).join('')}</tbody></table>`:'<div class="tourn-empty">No matches played yet</div>';
+}
+
+function renderFixtures(){
+  const container = document.getElementById('tab-fixtures');
+  if(!T.fixtures.length){container.innerHTML='<div class="tourn-empty">No fixtures</div>';return;}
+  container.innerHTML = T.fixtures.map((f,fi)=>`
+    <div class="fixture-card" id="fix-card-${fi}">
+      <div class="fix-teams">
+        <div>${f.t1}${f.score1?` <span class="fix-score">${f.score1.runs}/${f.score1.wickets}</span>`:''}</div>
+        <div class="fix-vs">vs</div>
+        <div>${f.t2}${f.score2?` <span class="fix-score">${f.score2.runs}/${f.score2.wickets}</span>`:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;">
+        <div class="fix-result">${f.result==='t1'?`🏆 ${f.t1} won`:f.result==='t2'?`🏆 ${f.t2} won`:f.status==='upcoming'?'Not played yet':'Tie'}</div>
+        <span class="fix-badge ${f.status==='done'?'fix-done':f.status==='live'?'fix-live':'fix-upcoming'}">${f.status==='done'?'Done':f.status==='live'?'LIVE':'Upcoming'}</span>
+      </div>
+      ${f.status==='done'
+        ? `<div class="fix-result-done">✓ Match complete</div>`
+        : `<button class="fix-start-btn" data-fi="${fi}">▶ Start This Match</button>`
+      }
+    </div>`).join('');
+
+  // Wire up Start Match buttons
+  container.querySelectorAll('.fix-start-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>openTournMatchModal(parseInt(btn.dataset.fi)));
+  });
+}
+
+// ── TOURNAMENT MATCH FLOW ──
+let _tournFixtureIdx = null;
+
+function openTournMatchModal(fi){
+  _tournFixtureIdx = fi;
+  const fix = T.fixtures[fi];
+  const needed = T.wickets + 1;
+
+  document.getElementById('tmTeamAName').textContent = fix.t1;
+  document.getElementById('tmTeamBName').textContent = fix.t2;
+  document.getElementById('tournMatchSub').textContent = `${fix.t1} vs ${fix.t2} · ${T.overs} overs · ${T.wickets} wickets`;
+  document.getElementById('tmHintA').textContent = `${needed} players needed`;
+  document.getElementById('tmHintB').textContent = `${needed} players needed`;
+
+  // Check if players already saved for these teams in this tournament
+  const savedA = T.teamPlayers && T.teamPlayers[fix.t1] ? T.teamPlayers[fix.t1] : [];
+  const savedB = T.teamPlayers && T.teamPlayers[fix.t2] ? T.teamPlayers[fix.t2] : [];
+
+  function buildPlayerInputs(containerId, saved){
+    const c = document.getElementById(containerId);
+    c.innerHTML = '';
+    for(let i=0;i<needed;i++){
+      const row = document.createElement('div');
+      row.className = 'p-row';
+      row.innerHTML = `<div class="p-num">${i+1}</div>
+        <input class="p-inp" id="${containerId}-p${i}" placeholder="Player ${i+1}" maxlength="20"
+          value="${saved[i]||''}" type="text" autocomplete="off"/>`;
+      c.appendChild(row);
+    }
+  }
+  buildPlayerInputs('tmPlayersA', savedA);
+  buildPlayerInputs('tmPlayersB', savedB);
+
+  openModal('tournMatchModal');
+}
+
+document.getElementById('tmStartBtn').addEventListener('click',()=>{
+  const fi = _tournFixtureIdx;
+  if(fi === null) return;
+  const fix = T.fixtures[fi];
+  const needed = T.wickets + 1;
+
+  // Collect players
+  const playersA = [], playersB = [];
+  for(let i=0;i<needed;i++){
+    const a = document.getElementById(`tmPlayersA-p${i}`)?.value.trim();
+    const b = document.getElementById(`tmPlayersB-p${i}`)?.value.trim();
+    if(!a){toast(`Enter all ${fix.t1} players!`);return;}
+    if(!b){toast(`Enter all ${fix.t2} players!`);return;}
+    playersA.push(a); playersB.push(b);
+  }
+
+  // Save players per team in tournament for reuse
+  if(!T.teamPlayers) T.teamPlayers = {};
+  T.teamPlayers[fix.t1] = playersA;
+  T.teamPlayers[fix.t2] = playersB;
+  saveTournament();
+
+  // Mark fixture as live
+  fix.status = 'live';
+  saveTournament();
+
+  // Build G from tournament settings
+  G = freshG();
+  G.format = 'overs';
+  G.overs = T.overs;
+  G.wickets = T.wickets;
+  G.teams[0] = {name: fix.t1, players: playersA};
+  G.teams[1] = {name: fix.t2, players: playersB};
+  G._tournFixtureIdx = fi; // tag so endMatch knows to update fixture
+
+  closeModal('tournMatchModal');
+  showTossScreen('match');
+});
+
+document.getElementById('tmCancelBtn').addEventListener('click',()=>closeModal('tournMatchModal'));
+
+function allBatters(){const arr=[];if(!T)return arr;T.fixtures.filter(f=>f.status==='done').forEach(f=>{if(f.inningsData){f.inningsData.filter(Boolean).forEach(inn=>{inn.batters.filter(b=>b.balls>0).forEach(b=>{const ex=arr.find(x=>x.name===b.name&&x.team===inn.teamName);if(ex){ex.runs+=b.runs;ex.balls+=b.balls;ex.fours+=b.fours;ex.sixes+=b.sixes;}else{arr.push({name:b.name,team:inn.teamName,runs:b.runs,balls:b.balls,fours:b.fours,sixes:b.sixes});}});});}}); return arr.sort((a,b)=>b.runs-a.runs);}
+function allBowlers(){const arr=[];if(!T)return arr;T.fixtures.filter(f=>f.status==='done').forEach(f=>{if(f.inningsData){f.inningsData.filter(Boolean).forEach(inn=>{inn.bowlers.filter(b=>b.overs>0||b.balls>0).forEach(b=>{const ex=arr.find(x=>x.name===b.name&&x.team===inn.fieldingTeamName);if(ex){ex.overs+=b.overs;ex.balls+=b.balls;ex.runs+=b.runs;ex.wickets+=b.wickets;}else{arr.push({name:b.name,team:inn.fieldingTeamName,overs:b.overs,balls:b.balls,runs:b.runs,wickets:b.wickets});}});});}}); return arr.sort((a,b)=>b.wickets-a.wickets);}
+
+function renderOrangeCap(){
+  const batters=allBatters();
+  document.getElementById('tab-orange').innerHTML=batters.length?`<div class="sc-card">${batters.slice(0,10).map((b,i)=>`<div class="cap-row"><div class="cap-rank">${i+1}</div><div class="cap-icon">${i===0?'🟠':'🏏'}</div><div><div class="cap-name">${b.name}</div><div class="cap-team">${b.team}</div></div><div class="cap-val cap-orange">${b.runs}</div></div>`).join('')}</div>`:'<div class="tourn-empty">No batting data yet</div>';
+}
+function renderPurpleCap(){
+  const bowlers=allBowlers();
+  document.getElementById('tab-purple').innerHTML=bowlers.length?`<div class="sc-card">${bowlers.slice(0,10).map((b,i)=>`<div class="cap-row"><div class="cap-rank">${i+1}</div><div class="cap-icon">${i===0?'🟣':'⚡'}</div><div><div class="cap-name">${b.name}</div><div class="cap-team">${b.team}</div></div><div class="cap-val cap-purple">${b.wickets}w</div></div>`).join('')}</div>`:'<div class="tourn-empty">No bowling data yet</div>';
+}
+function renderMVP(){
+  const batters=allBatters().map(b=>({...b,score:b.runs+(b.fours*0.5)+(b.sixes*1)}));
+  const bowlers=allBowlers().map(b=>({...b,score:b.wickets*20}));
+  const combined={};[...batters,...bowlers].forEach(p=>{const k=p.name+'|'+(p.team||'');if(!combined[k])combined[k]={name:p.name,team:p.team||'',score:0};combined[k].score+=p.score;});
+  const sorted=Object.values(combined).sort((a,b)=>b.score-a.score);
+  document.getElementById('tab-mvp').innerHTML=sorted.length?`<div class="sc-card">${sorted.slice(0,10).map((p,i)=>`<div class="cap-row"><div class="cap-rank">${i+1}</div><div class="cap-icon">${i===0?'⭐':'🏅'}</div><div><div class="cap-name">${p.name}</div><div class="cap-team">${p.team}</div></div><div class="cap-val cap-mvp">${p.score.toFixed(0)}</div></div>`).join('')}</div>`:'<div class="tourn-empty">No match data yet</div>';
+}
+function renderNRR(){
+  const pts=calcPoints();const sorted=T.teams.slice().sort((a,b)=>parseFloat(nrr(pts[b]))-parseFloat(nrr(pts[a])));
+  document.getElementById('tab-nrr').innerHTML=sorted.length?`<div class="sc-card"><div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;padding:6px 12px;border-bottom:1px solid var(--border);"><div class="col-l" style="text-align:left;">Team</div><div class="col-l">RF</div><div class="col-l">RA</div><div class="col-l">Ov</div><div class="col-l">NRR</div></div>${sorted.map(t=>{const p=pts[t];const n=parseFloat(nrr(p));return`<div class="nrr-row"><div class="nrr-td">${t}</div><div class="nrr-td">${p.rf}</div><div class="nrr-td">${p.ra}</div><div class="nrr-td">${(p.rb/6).toFixed(1)}</div><div class="nrr-td ${n>=0?'nrr-pos':'nrr-neg'}">${nrr(p)}</div></div>`;}).join('')}</div>`:'<div class="tourn-empty">No match data for NRR</div>';
+}
+function updateTournamentWithMatch(){
+  if(!T||!G)return;
+  const t1=G.teams[0].name,t2=G.teams[1].name;
+  const fix=T.fixtures.find(f=>(f.t1===t1&&f.t2===t2)||(f.t1===t2&&f.t2===t1));
+  if(!fix)return;
+  const i0=G.inningsData[0],i1=G.inningsData[1];if(!i0||!i1)return;
+  fix.status='done';fix.inningsData=G.inningsData;
+  fix.score1={runs:i0.runs,wickets:i0.wickets,balls:i0.balls,teamName:G.teams[i0.bIdx].name,fieldingTeamName:G.teams[i0.fIdx].name};
+  fix.score2={runs:i1.runs,wickets:i1.wickets,balls:i1.balls,teamName:G.teams[i1.bIdx].name,fieldingTeamName:G.teams[i1.fIdx].name};
+  i0.teamName=G.teams[i0.bIdx].name;i0.fieldingTeamName=G.teams[i0.fIdx].name;
+  i1.teamName=G.teams[i1.bIdx].name;i1.fieldingTeamName=G.teams[i1.fIdx].name;
+  const tgt=i0.runs+1;
+  if(i1.runs>=tgt)fix.result=G.teams[i1.bIdx].name===t1?'t1':'t2';
+  else fix.result=G.teams[i0.bIdx].name===t1?'t1':'t2';
+  saveTournament();
+}
+
+// ════ CONFETTI ════
+function launchConfetti(){
+  const w=document.getElementById('confetti');w.innerHTML='';w.classList.add('show');
+  const colors=['#b5f000','#f5c518','#00d4ff','#ff3d5a','#fff','#a78bfa'];
+  for(let i=0;i<70;i++){const el=document.createElement('div');el.className='cp';el.style.cssText=`left:${Math.random()*100}vw;width:${5+Math.random()*7}px;height:${9+Math.random()*8}px;background:${colors[i%colors.length]};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*.8}s;transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>.5?'50%':'2px'};`;w.appendChild(el);}
+  setTimeout(()=>{w.classList.remove('show');w.innerHTML='';},4500);
+}
+
+// ════ NAV WIRING ════
+document.getElementById('newMatchBtn').addEventListener('click',()=>{showScreen('setup');initSetup();});
+document.getElementById('newMatchBtn2').addEventListener('click',()=>showScreen('splash'));
+document.getElementById('backToTournBtn').addEventListener('click',()=>{showScreen('tournament');initTournament();});
+document.getElementById('histBtn').addEventListener('click',()=>{showScreen('history');loadHistory();});
+document.getElementById('histBack').addEventListener('click',()=>showScreen('splash'));
+document.getElementById('tournBtn').addEventListener('click',()=>{showScreen('tournament');initTournament();});
+document.getElementById('tournBack').addEventListener('click',()=>showScreen('splash'));
+document.getElementById('newTournBtn').addEventListener('click',()=>{tournTeams=[];renderTeamChips();document.getElementById('tournTeamChips').innerHTML='';document.getElementById('tournNameInp').value='';openModal('tournSetupModal');});
+document.getElementById('newTournBtn2').addEventListener('click',()=>{tournTeams=[];renderTeamChips();document.getElementById('tournTeamChips').innerHTML='';document.getElementById('tournNameInp').value='';openModal('tournSetupModal');});
+
+// ════ DUEL MODE ════
+let D = {}; // Duel state
+
+function freshDuel(p1, p2, balls, lives) {
+  return {
+    p1, p2,
+    ballsEach: balls,
+    livesEach: lives,
+    innings: 0, // 0 = p1 batting, 1 = p2 batting
+    scores: [
+      { name: p1, runs: 0, balls: 0, fours: 0, sixes: 0, lives: lives, ballHistory: [], _snap: null },
+      { name: p2, runs: 0, balls: 0, fours: 0, sixes: 0, lives: lives, ballHistory: [], _snap: null }
+    ]
+  };
+}
+
+let duelBalls = 12, duelLives = 2;
+mkStepper('duelBallsDn','duelBallsUp','duelBallsVal', ()=>duelBalls, v=>{duelBalls=v;}, 3, 60, 3);
+mkStepper('duelLivesDn','duelLivesUp','duelLivesVal', ()=>duelLives, v=>{duelLives=v;}, 1, 10, 1);
+
+document.getElementById('duelBtn').addEventListener('click', ()=>{
+  document.getElementById('duelP1').value = '';
+  document.getElementById('duelP2').value = '';
+  document.getElementById('duelBallsVal').textContent = duelBalls;
+  document.getElementById('duelLivesVal').textContent = duelLives;
+  showScreen('duelSetup');
+});
+document.getElementById('duelBack').addEventListener('click', ()=>showScreen('splash'));
+
+document.getElementById('duelStartBtn').addEventListener('click', ()=>{
+  const p1 = document.getElementById('duelP1').value.trim();
+  const p2 = document.getElementById('duelP2').value.trim();
+  if(!p1 || !p2) { toast('Enter both player names!'); return; }
+  if(p1 === p2) { toast('Use different names!'); return; }
+  D = freshDuel(p1, p2, duelBalls, duelLives);
+  showTossScreen('duel');
+});
+
+function duelCurrent() { return D.scores[D.innings]; }
+
+function duelChipClass(b) {
+  if(b.type === 'out') return 'bc-w';
+  if(b.extra === 'wide' || b.extra === 'nb') return 'bc-wd';
+  if(b.runs === 0) return 'bc-dot';
+  if(b.runs === 4) return 'bc-4';
+  if(b.runs === 6) return 'bc-6';
+  if(b.runs === 1) return 'bc-1';
+  if(b.runs === 2) return 'bc-2';
+  return 'bc-3';
+}
+
+function renderDuel() {
+  const cur = duelCurrent();
+  const ballsUsed = cur.balls;
+  const ballsLeft = D.ballsEach - ballsUsed;
+
+  document.getElementById('duelInningLbl').textContent =
+    D.innings === 0 ? `${D.p1} is Batting` : `${D.p2} is Batting`;
+  document.getElementById('duelRuns').textContent = cur.runs;
+  document.getElementById('duelBallsLeft').textContent = ballsLeft + 'b left';
+  document.getElementById('duelLivesLeft').textContent = cur.lives + ' left';
+
+  document.getElementById('duelBatterLbl').textContent = `🏏 ${cur.name}`;
+  document.getElementById('duelBatterName').textContent = cur.name;
+  document.getElementById('duelBatterRuns').textContent = cur.runs;
+  document.getElementById('duelBatterMeta').textContent =
+    `${cur.balls} balls · ${cur.fours}×4 · ${cur.sixes}×6`;
+  const sr = cur.balls > 0 ? ((cur.runs / cur.balls) * 100).toFixed(0) : '—';
+  document.getElementById('duelSRLbl').textContent = `SR ${sr}`;
+
+  // Lives dots
+  const liveDots = '●'.repeat(cur.lives) + '○'.repeat(Math.max(0, D.livesEach - cur.lives));
+  document.getElementById('duelLivesDisplay').textContent = liveDots;
+  document.getElementById('duelLivesCount').textContent = cur.lives;
+
+  // Target strip for innings 2
+  if(D.innings === 1) {
+    const tgt = D.scores[0].runs + 1;
+    const need = tgt - cur.runs;
+    document.getElementById('duelTargetStrip').textContent =
+      `Target ${tgt} · Need ${need} off ${ballsLeft}b`;
+    document.getElementById('duelTargetStrip').classList.add('show');
+    document.getElementById('duelNeedMeta').style.display = '';
+    document.getElementById('duelNeed').textContent = need + ' off ' + ballsLeft + 'b';
+  }
+
+  // Ball strip
+  const strip = document.getElementById('duelBallStrip');
+  strip.innerHTML = '';
+  cur.ballHistory.forEach(b => {
+    const ch = document.createElement('div');
+    ch.className = 'bc ' + duelChipClass(b);
+    ch.textContent = b.label || '•';
+    strip.appendChild(ch);
+  });
+  strip.scrollLeft = strip.scrollWidth;
+}
+
+function duelRecordBall(ball) {
+  const cur = duelCurrent();
+
+  // Save snap for undo
+  cur._snap = JSON.stringify({
+    runs: cur.runs, balls: cur.balls, fours: cur.fours,
+    sixes: cur.sixes, lives: cur.lives,
+    ballHistory: [...cur.ballHistory]
+  });
+
+  // Extras don't count as a ball
+  if(ball.extra === 'wide' || ball.extra === 'nb') {
+    cur.runs += ball.runs;
+    cur.ballHistory.push({...ball, label: ball.extra === 'wide' ? 'Wd' : 'NB'});
+    // Check if p2 already beat p1 target
+    if(D.innings === 1 && cur.runs >= D.scores[0].runs + 1) { duelEndMatch(); return; }
+    renderDuel(); return;
+  }
+
+  cur.balls++;
+  cur.runs += ball.runs;
+  if(ball.type === 'boundary') cur.fours++;
+  if(ball.type === 'six') cur.sixes++;
+  const lbl = ball.runs === 0 ? '•' : String(ball.runs);
+  cur.ballHistory.push({...ball, label: lbl});
+
+  // Check chase win
+  if(D.innings === 1 && cur.runs >= D.scores[0].runs + 1) { duelEndMatch(); return; }
+
+  // Balls used up
+  if(cur.balls >= D.ballsEach) { duelEndInnings(); return; }
+
+  // Lives check (no more lives = innings over)
+  if(cur.lives <= 0) { duelEndInnings(); return; }
+
+  renderDuel();
+}
+
+function duelRecordOut() {
+  const cur = duelCurrent();
+  cur._snap = JSON.stringify({
+    runs: cur.runs, balls: cur.balls, fours: cur.fours,
+    sixes: cur.sixes, lives: cur.lives,
+    ballHistory: [...cur.ballHistory]
+  });
+  cur.balls++;
+  cur.lives--;
+  cur.ballHistory.push({type:'out', runs:0, label:'W'});
+
+  if(cur.lives <= 0 || cur.balls >= D.ballsEach) { duelEndInnings(); return; }
+  renderDuel();
+}
+
+function duelEndInnings() {
+  if(D.innings === 0) {
+    // Show innings break, let p2 start
+    const p1score = D.scores[0].runs;
+    toast(`${D.p1} scored ${p1score}! Now ${D.p2} bats 🏏`);
+    setTimeout(() => {
+      D.innings = 1;
+      showDuelBreakModal(p1score);
+    }, 800);
+  } else {
+    duelEndMatch();
+  }
+}
+
+// Inline break (simple modal reuse)
+function showDuelBreakModal(p1score) {
+  const tgt = p1score + 1;
+  document.getElementById('innBreakTarget').textContent = tgt;
+  document.getElementById('innBreakSub').textContent = `${D.p1} scored ${p1score}`;
+  document.getElementById('innBreakMsg').textContent = `${D.p2} needs ${tgt} to win`;
+  // Hide the opener/bowler selects — not needed for duel
+  ['inn2O1','inn2O2','inn2Bowl'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('inn2Start').textContent = `${D.p2} Bats Now 🏏`;
+  document.getElementById('inn2Start').dataset.duelMode = '1';
+  openModal('innBreakModal');
+}
+
+// Override inn2Start for duel mode
+const _origInn2Start = document.getElementById('inn2Start').onclick;
+document.getElementById('inn2Start').addEventListener('click', function() {
+  if(this.dataset.duelMode === '1') {
+    this.dataset.duelMode = '';
+    this.textContent = 'Start 2nd Innings 🏏';
+    ['inn2O1','inn2O2','inn2Bowl'].forEach(id => {
+      document.getElementById(id).style.display = '';
+    });
+    closeModal('innBreakModal');
+    renderDuel();
+  }
+});
+
+function duelEndMatch() {
+  const s0 = D.scores[0], s1 = D.scores[1];
+  let winner, margin;
+
+  if(!s1 || D.innings === 0) {
+    // Only p1 batted (shouldn't happen in normal flow)
+    winner = s0.name;
+    margin = `${s0.runs} runs (unopposed)`;
+  } else if(s1.runs > s0.runs) {
+    winner = s1.name;
+    const diff = s1.runs - s0.runs;
+    margin = `Won by ${diff} run${diff !== 1 ? 's' : ''} with ${s1.lives} ${s1.lives === 1 ? 'life' : 'lives'} remaining`;
+  } else if(s0.runs > s1.runs) {
+    winner = s0.name;
+    const diff = s0.runs - s1.runs;
+    margin = `Won by ${diff} run${diff !== 1 ? 's' : ''}`;
+  } else {
+    winner = 'TIE!';
+    margin = `Both scored ${s0.runs} runs`;
+  }
+
+  D.winner = winner;
+  D.margin = margin;
+
+  showScreen('duelEnd');
+  launchConfetti();
+
+  document.getElementById('duelTrophy').textContent = winner === 'TIE!' ? '🤝' : '🏆';
+  document.getElementById('duelWinner').textContent = winner;
+  document.getElementById('duelMarginTxt').textContent = margin;
+
+  // Scorecard
+  const sc = document.getElementById('duelScorecard');
+  sc.innerHTML = [s0, D.innings >= 1 ? s1 : null].filter(Boolean).map(s => `
+    <div class="sc-title">${s.name}</div>
+    <div class="sc-card">
+      <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:13px;color:var(--muted);">${s.balls} balls · ${s.fours}×4 · ${s.sixes}×6</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;">Lives lost: ${D.livesEach - s.lives}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">SR: ${s.balls > 0 ? ((s.runs/s.balls)*100).toFixed(0) : '—'}</div>
+        </div>
+        <div style="font-family:var(--mono);font-size:52px;font-weight:700;color:${s === s0 && s1 && s0.runs >= s1.runs ? 'var(--lime)' : s === s1 && s1.runs > s0.runs ? 'var(--lime)' : 'var(--text)'};">${s.runs}</div>
+      </div>
+      <div style="padding:8px 14px;display:flex;gap:5px;flex-wrap:wrap;border-top:1px solid var(--border);">
+        ${s.ballHistory.map(b => `<div class="bc ${duelChipClass(b)}" style="width:28px;height:28px;font-size:10px;">${b.label||'•'}</div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  // Save to history
+  saveDuelHistory(winner, margin);
+}
+
+function saveDuelHistory(winner, margin) {
+  const h = JSON.parse(localStorage.getItem('criksy_h') || '[]');
+  h.unshift({
+    teams: [D.p1, D.p2],
+    winner, margin,
+    scores: [`${D.p1}: ${D.scores[0].runs}`, `${D.p2}: ${D.scores[1]?.runs ?? 0}`],
+    date: new Date().toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'}),
+    mode: 'duel'
+  });
+  localStorage.setItem('criksy_h', JSON.stringify(h.slice(0, 50)));
+}
+
+// Duel run buttons
+document.getElementById('duelRb0').addEventListener('click', ()=>duelRecordBall({runs:0,type:'dot'}));
+document.getElementById('duelRb1').addEventListener('click', ()=>duelRecordBall({runs:1,type:'run'}));
+document.getElementById('duelRb2').addEventListener('click', ()=>duelRecordBall({runs:2,type:'run'}));
+document.getElementById('duelRb3').addEventListener('click', ()=>duelRecordBall({runs:3,type:'run'}));
+document.getElementById('duelRb4').addEventListener('click', ()=>duelRecordBall({runs:4,type:'boundary'}));
+document.getElementById('duelRb6').addEventListener('click', ()=>duelRecordBall({runs:6,type:'six'}));
+document.getElementById('duelWide').addEventListener('click', ()=>duelRecordBall({runs:1,type:'extra',extra:'wide'}));
+document.getElementById('duelNb').addEventListener('click', ()=>duelRecordBall({runs:1,type:'extra',extra:'nb'}));
+document.getElementById('duelBye').addEventListener('click', ()=>duelRecordBall({runs:1,type:'extra',extra:'bye'}));
+document.getElementById('duelWkt').addEventListener('click', ()=>duelRecordOut());
+
+document.getElementById('duelUndo').addEventListener('click', ()=>{
+  const cur = duelCurrent();
+  if(!cur._snap) { toast('Nothing to undo!'); return; }
+  const s = JSON.parse(cur._snap);
+  Object.assign(cur, s);
+  cur._snap = null;
+  renderDuel();
+  toast('Undone ↩');
+});
+
+document.getElementById('duelShareWa').addEventListener('click', ()=>{
+  const s0 = D.scores[0], s1 = D.scores[1];
+  let txt = `⚔️ *CRIKSY DUEL*\n${D.p1} vs ${D.p2}\n\n`;
+  txt += `🏏 ${D.p1}: ${s0.runs} runs (${s0.balls}b · ${s0.fours}×4 · ${s0.sixes}×6)\n`;
+  if(s1) txt += `🏏 ${D.p2}: ${s1.runs} runs (${s1.balls}b · ${s1.fours}×4 · ${s1.sixes}×6)\n`;
+  txt += `\n🏆 *${D.winner}* — ${D.margin}\n\nScored with Criksy ⚔️`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
+});
+
+document.getElementById('duelNewBtn').addEventListener('click', ()=>{
+  document.getElementById('duelBallsVal').textContent = duelBalls;
+  document.getElementById('duelLivesVal').textContent = duelLives;
+  showScreen('duelSetup');
+});
+document.getElementById('duelHomeBtn').addEventListener('click', ()=>showScreen('splash'));
+
+// ════ END OF DUEL ════
+
+// Check spectator on load
+window.addEventListener('DOMContentLoaded',()=>{checkSpectator();});
+</script>
+</body>
+</html>
